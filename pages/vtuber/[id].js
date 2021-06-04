@@ -4,6 +4,7 @@ import Header from "../../components/header";
 import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber";
 
 export default function Post({ data }) {
+  console.log("vtuberInfo作成中");
   const Div = styled.div`
     display: flex;
     flex-direction: column;
@@ -45,7 +46,6 @@ export default function Post({ data }) {
     overflow: hidden;
   `;
   const vtuberInfo = data[0];
-  console.log("vtuberInfo", vtuberInfo);
   return (
     <Div>
       <Header />
@@ -92,14 +92,31 @@ export default function Post({ data }) {
 
 export async function getStaticPaths() {
   const paths = await getAllVtuberNames();
+  /*
+  const paths = [
+    { params: { id: '金魚坂めいろ' } },
+    { params: { id: '鳴門こがね' } },
+    { params: { id: '八朔ゆず' } },
+    { params: { id: '雪汝' } },
+    { params: { id: '名伽尾アズマ' } },
+    { params: { id: '出雲霞' } },
+    { params: { id: '闇夜乃モルル' } },
+    { params: { id: '久遠千歳' } },
+    { params: { id: '海夜叉神' } },
+    { params: { id: '御伽原江良' } },
+    { params: { id: '遠北千南' } }
+  ]
+  */
   return {
     paths,
-    fallback: false,
+    fallback: 'blocking',
   };
 }
 
 export async function getStaticProps({ params }) {
+  console.log("params.id", params.id || "error!!!");
   const data = await getVtuberInfo(params.id);
+  console.log("data", data);
   return {
     props: {
       data,

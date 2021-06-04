@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "../../components/header";
 
 export default function VtuberList({ data }) {
+  console.log("vtuberList作成中");
   const Div = styled.div`
     display: flex;
     flex-direction: column;
@@ -95,7 +96,7 @@ export default function VtuberList({ data }) {
 }
 
 export async function getStaticProps() {
-  const params = { affiliation: "にじさんじ,にじさんじ卒業" };
+  const params = { affiliation: "にじさんじ卒業" };
   const query = new URLSearchParams(params);
   const res = await fetch(`http://localhost:8081/vtuber?${query}`, {
     method: "GET",

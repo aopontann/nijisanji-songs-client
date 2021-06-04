@@ -6,6 +6,7 @@ import styled from "styled-components";
 import Link from "next/link";
 
 export default function Home() {
+  console.log("top画面作成中");
   const Div = styled.div`
     display: flex;
     flex-direction: column;
