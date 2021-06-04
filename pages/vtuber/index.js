@@ -96,9 +96,10 @@ export default function VtuberList({ data }) {
 }
 
 export async function getStaticProps() {
+  const Address = process.env.API_ADDRESS;
   const params = { affiliation: "にじさんじ卒業" };
   const query = new URLSearchParams(params);
-  const res = await fetch(`http://localhost:8081/vtuber?${query}`, {
+  const res = await fetch(`${Address}/vtuber?${query}`, {
     method: "GET",
   });
   const data = await res.json();
