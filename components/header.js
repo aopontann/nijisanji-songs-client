@@ -12,7 +12,7 @@ export default function Header() {
     <Header>
       <Link href="/">
         <a>
-          <Title>にじ歌まとめ</Title>
+          <Title>にじ歌まとめ(仮)</Title>
         </a>
       </Link>
     </Header>
