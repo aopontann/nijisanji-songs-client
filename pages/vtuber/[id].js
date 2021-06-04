@@ -1,9 +1,18 @@
-import styled from "styled-components"
-import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber"
+import Link from "next/link";
+import styled from "styled-components";
+import Header from "../../components/header";
+import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber";
 
 export default function Post({ data }) {
   const Div = styled.div`
-    background-color: #EAF0F6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0rem;
+    padding: 0rem;
+  `;
+  const H1 = styled.h1`
+    margin-left: 1rem;
   `;
   const H2 = styled.h2`
     text-align: center;
@@ -39,57 +48,63 @@ export default function Post({ data }) {
   console.log("vtuberInfo", vtuberInfo);
   return (
     <Div>
-      <h1>{vtuberInfo.name}</h1>
+      <Header />
+      <H1>{vtuberInfo.name}</H1>
       <H2>歌</H2>
       <Ul>
-        {vtuberInfo.songVtuber.map(joinVideo => {
-          if(joinVideo.role == "歌") {
+        {vtuberInfo.songVtuber.map((joinVideo) => {
+          if (joinVideo.role == "歌") {
             return (
-              <a target="_blank" href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}>
+              <a
+                target="_blank"
+                href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}
+              >
                 <Li>
                   <Img src={joinVideo.videos.thumbnail.medium} />
                   <P>{joinVideo.videos.title}</P>
                 </Li>
               </a>
-            )
+            );
           }
         })}
       </Ul>
       <H2>歌以外</H2>
       <Ul>
-        {vtuberInfo.songVtuber.map(joinVideo => {
-          if(joinVideo.role != "歌") {
+        {vtuberInfo.songVtuber.map((joinVideo) => {
+          if (joinVideo.role != "歌") {
             return (
-              <a target="_blank" href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}>
+              <a
+                target="_blank"
+                href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}
+              >
                 <Li>
                   <Img src={joinVideo.videos.thumbnail.medium} />
                   <P>{joinVideo.videos.title}</P>
                 </Li>
               </a>
-            )
+            );
           }
         })}
       </Ul>
     </Div>
-  )
+  );
 }
 
 export async function getStaticPaths() {
   const paths = await getAllVtuberNames();
   return {
     paths,
-    fallback: false
-  }
+    fallback: false,
+  };
 }
-
 
 export async function getStaticProps({ params }) {
   const data = await getVtuberInfo(params.id);
   return {
     props: {
-      data
-    }
-  }
+      data,
+    },
+  };
 }
 
 /*

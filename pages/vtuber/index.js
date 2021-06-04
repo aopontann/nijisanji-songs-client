@@ -4,7 +4,10 @@ import Header from "../../components/header";
 
 export default function VtuberList({ data }) {
   const Div = styled.div`
-    margin: 0em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0rem;
     padding: 0rem;
   `;
   const Main = styled.main`
@@ -12,7 +15,6 @@ export default function VtuberList({ data }) {
   `;
   const H2 = styled.h2`
     text-align: center;
-    padding-top: 1.8rem;
   `;
   const Ul = styled.ul`
     display: flex;
