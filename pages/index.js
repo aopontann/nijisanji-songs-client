@@ -1,6 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
 import Header from "../components/header";
 import styled from "styled-components";
 import Link from "next/link";
@@ -33,9 +31,7 @@ export default function Home({ data }) {
       <Header />
       <Main>
         <H1>Welcome to にじ歌まとめ(仮)</H1>
-        <p>
-          このサイトはにじさんじの歌ってみた動画をまとめたサイトです
-        </p>
+        <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
         <br />
         <h2>今日のおすすめ動画</h2>
         <YouTube>
@@ -65,7 +61,7 @@ export async function getStaticProps() {
     method: "GET",
   });
   const data = await res.json();
-  const random = Math.floor( Math.random() * data.length )
+  const random = Math.floor(Math.random() * data.length);
 
   return {
     props: {
