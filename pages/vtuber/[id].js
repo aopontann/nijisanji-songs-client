@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Header from "../../components/header";
 import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber";
 
-export default function Post({ data }) {
+export default function Post({ data, now }) {
   console.log("vtuberInfo作成中");
   const Div = styled.div`
     display: flex;
@@ -50,6 +50,7 @@ export default function Post({ data }) {
     <Div>
       <Header />
       <H1>{vtuberInfo.name}</H1>
+      <p>{now}</p>
       <H2>歌</H2>
       <Ul>
         {vtuberInfo.songVtuber.map((joinVideo) => {
@@ -117,9 +118,11 @@ export async function getStaticProps({ params }) {
   console.log("params.id", params.id || "error!!!");
   const data = await getVtuberInfo(params.id);
   console.log("data", data);
+  const now = new Date();
   return {
     props: {
       data,
+      now: now.toString(),
     },
     revalidate: 3600,
   };
