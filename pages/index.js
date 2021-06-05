@@ -5,7 +5,7 @@ import Header from "../components/header";
 import styled from "styled-components";
 import Link from "next/link";
 
-export default function Home() {
+export default function Home({ data }) {
   console.log("top画面作成中");
   const Div = styled.div`
     display: flex;
@@ -42,7 +42,7 @@ export default function Home() {
           <iframe
             width="560"
             height="315"
-            src="https://www.youtube.com/embed/3tgCntI4tBs"
+            src={`https://www.youtube.com/embed/${data.id}`}
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -55,4 +55,22 @@ export default function Home() {
       </Main>
     </Div>
   );
+}
+
+export async function getStaticProps() {
+  const Address = process.env.API_ADDRESS;
+  const params = { maxResults: 10 };
+  const query = new URLSearchParams(params);
+  const res = await fetch(`${Address}/videos?${query}`, {
+    method: "GET",
+  });
+  const data = await res.json();
+  const random = Math.floor( Math.random() * data.length )
+
+  return {
+    props: {
+      data: data[random],
+    },
+    revalidate: 30,
+  };
 }
