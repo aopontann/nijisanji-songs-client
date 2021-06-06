@@ -124,7 +124,7 @@ export async function getStaticProps({ params }) {
       data,
       now: now.toString(),
     },
-    revalidate: 600,
+    revalidate: 10,
   };
 }
 
