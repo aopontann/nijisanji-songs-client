@@ -2,6 +2,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import Header from "../../components/header";
 import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber";
+import { get_time } from "../../lib/get_times";
 
 export default function Post({ data, now }) {
   console.log("vtuberInfo作成中");
@@ -50,7 +51,7 @@ export default function Post({ data, now }) {
     <Div>
       <Header />
       <H1>{vtuberInfo.name}</H1>
-      <p>{now}</p>
+      <p>{`更新時間: ${now}(10分おき更新)`}</p>
       <H2>歌</H2>
       <Ul>
         {vtuberInfo.songVtuber.map((joinVideo) => {
@@ -119,7 +120,7 @@ export async function getStaticProps({ params }) {
   console.log("params.id", params.id || "error!!!");
   const data = await getVtuberInfo(params.id);
   console.log("data", data);
-  const now = new Date();
+  const now = get_time("Asia/Tokyo", 0);
   return {
     props: {
       data,
