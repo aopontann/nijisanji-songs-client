@@ -110,7 +110,7 @@ export async function getStaticPaths() {
   */
   return {
     paths,
-    fallback: 'blocking',
+    fallback: false,
   };
 }
 
@@ -128,6 +128,29 @@ export async function getStaticProps({ params }) {
     revalidate: 10,
   };
 }
+
+/*
+export async function getStaticProps() {
+  console.log("getStaticProps");
+  const now = new Date();
+  const Address = process.env.API_ADDRESS;
+  const params = { maxResults: 10 };
+  const query = new URLSearchParams(params);
+  const res = await fetch(`${Address}/videos?${query}`, {
+    method: "GET",
+  });
+  const data = await res.json();
+  const random = Math.floor(Math.random() * data.length);
+
+  return {
+    props: {
+      data: data[random],
+      time: now.toString(),
+    },
+    revalidate: 30,
+  };
+}
+*/
 
 /*
 [
