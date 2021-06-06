@@ -31,7 +31,7 @@ export default function Home({ data, time }) {
       <Header />
       <Main>
         <H1>Welcome to にじ歌まとめ(仮)</H1>
-        <p>{time}</p>
+        <p>{time || "none"}</p>
         <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
         <br />
         <h2>今日のおすすめ動画</h2>
@@ -69,7 +69,7 @@ export async function getStaticProps() {
   return {
     props: {
       data: data[random],
-      time: now,
+      time: now.toString(),
     },
     revalidate: 30,
   };
