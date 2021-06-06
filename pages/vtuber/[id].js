@@ -92,8 +92,7 @@ export default function Post({ data, now }) {
 }
 
 export async function getStaticPaths() {
-  const paths = await getAllVtuberNames();
-  /*
+  //const paths = await getAllVtuberNames();
   const paths = [
     { params: { id: '金魚坂めいろ' } },
     { params: { id: '鳴門こがね' } },
@@ -107,10 +106,9 @@ export async function getStaticPaths() {
     { params: { id: '御伽原江良' } },
     { params: { id: '遠北千南' } }
   ]
-  */
   return {
     paths,
-    fallback: false,
+    fallback: 'blocking',
   };
 }
 
