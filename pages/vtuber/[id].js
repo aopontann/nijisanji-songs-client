@@ -115,6 +115,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
+  console.log("getStaticProps");
   console.log("params.id", params.id || "error!!!");
   const data = await getVtuberInfo(params.id);
   console.log("data", data);
