@@ -46,12 +46,15 @@ export default function Post({ data, now }) {
     -webkit-line-clamp: 2;
     overflow: hidden;
   `;
+  const P_time = styled.p`
+    text-align: right;
+  `;
   const vtuberInfo = data[0];
   return (
     <Div>
       <Header />
       <H1>{vtuberInfo.name}</H1>
-      <p>{`更新時間: ${now}(10分おき更新)`}</p>
+      <P_time>{`更新時間: ${now}(10分おき更新)`}</P_time>
       <H2>歌</H2>
       <Ul>
         {vtuberInfo.songVtuber.map((joinVideo) => {
@@ -126,7 +129,7 @@ export async function getStaticProps({ params }) {
       data,
       now: now.toString(),
     },
-    revalidate: 10,
+    revalidate: 60 * 10,
   };
 }
 

@@ -3,7 +3,7 @@ import Header from "../components/header";
 import styled from "styled-components";
 import Link from "next/link";
 
-export default function Home({ data, time }) {
+export default function Home({ data }) {
   console.log("top画面作成中");
   const Div = styled.div`
     display: flex;
@@ -31,10 +31,9 @@ export default function Home({ data, time }) {
       <Header />
       <Main>
         <H1>Welcome to にじ歌まとめ(仮)</H1>
-        <p>{time || "none"}</p>
         <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
         <br />
-        <h2>今日のおすすめ動画</h2>
+        <h2>おすすめ動画</h2>
         <YouTube>
           <iframe
             width="560"
@@ -47,7 +46,11 @@ export default function Home({ data, time }) {
           ></iframe>
         </YouTube>
         <Link href="/vtuber">
-          <a>vtuber一覧</a>
+          <a>
+            <h2>
+              vtuber一覧(クリック)
+            </h2>
+          </a>
         </Link>
       </Main>
     </Div>
@@ -55,10 +58,8 @@ export default function Home({ data, time }) {
 }
 
 export async function getStaticProps() {
-  console.log("getStaticProps");
-  const now = new Date();
   const Address = process.env.API_ADDRESS;
-  const params = { maxResults: 10 };
+  const params = { maxResults: 30 };
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
@@ -69,8 +70,7 @@ export async function getStaticProps() {
   return {
     props: {
       data: data[random],
-      time: now.toString(),
     },
-    revalidate: 30,
+    revalidate: 60 * 10,
   };
 }
