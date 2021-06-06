@@ -3,7 +3,7 @@ import Header from "../components/header";
 import styled from "styled-components";
 import Link from "next/link";
 
-export default function Home({ data }) {
+export default function Home({ data, time }) {
   console.log("top画面作成中");
   const Div = styled.div`
     display: flex;
@@ -31,6 +31,7 @@ export default function Home({ data }) {
       <Header />
       <Main>
         <H1>Welcome to にじ歌まとめ(仮)</H1>
+        <p>{time}</p>
         <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
         <br />
         <h2>今日のおすすめ動画</h2>
@@ -55,6 +56,7 @@ export default function Home({ data }) {
 
 export async function getStaticProps() {
   console.log("getStaticProps");
+  const now = new Date();
   const Address = process.env.API_ADDRESS;
   const params = { maxResults: 10 };
   const query = new URLSearchParams(params);
@@ -67,6 +69,7 @@ export async function getStaticProps() {
   return {
     props: {
       data: data[random],
+      time: now,
     },
     revalidate: 30,
   };
