@@ -2,8 +2,9 @@ import Link from "next/link";
 import styled from "styled-components";
 import Header from "../../components/header";
 import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber";
+import { get_time } from "../../lib/get_times";
 
-export default function Post({ data }) {
+export default function Post({ data, now }) {
   console.log("vtuberInfo作成中");
   const Div = styled.div`
     display: flex;
@@ -45,11 +46,15 @@ export default function Post({ data }) {
     -webkit-line-clamp: 2;
     overflow: hidden;
   `;
+  const P_time = styled.p`
+    text-align: right;
+  `;
   const vtuberInfo = data[0];
   return (
     <Div>
       <Header />
       <H1>{vtuberInfo.name}</H1>
+      <P_time>{`更新時間: ${now}(10分おき更新)`}</P_time>
       <H2>歌</H2>
       <Ul>
         {vtuberInfo.songVtuber.map((joinVideo) => {
@@ -91,7 +96,7 @@ export default function Post({ data }) {
 }
 
 export async function getStaticPaths() {
-  const paths = await getAllVtuberNames();
+  //const paths = await getAllVtuberNames();
   /*
   const paths = [
     { params: { id: '金魚坂めいろ' } },
@@ -108,22 +113,48 @@ export async function getStaticPaths() {
   ]
   */
   return {
-    paths,
+    paths: [],
     fallback: 'blocking',
   };
 }
 
 export async function getStaticProps({ params }) {
+  console.log("getStaticProps");
   console.log("params.id", params.id || "error!!!");
   const data = await getVtuberInfo(params.id);
   console.log("data", data);
+  const now = get_time("Asia/Tokyo", 0);
   return {
     props: {
       data,
+      now: now.toString(),
     },
-    revalidate: 3600,
+    revalidate: 60 * 10,
   };
 }
+
+/*
+export async function getStaticProps() {
+  console.log("getStaticProps");
+  const now = new Date();
+  const Address = process.env.API_ADDRESS;
+  const params = { maxResults: 10 };
+  const query = new URLSearchParams(params);
+  const res = await fetch(`${Address}/videos?${query}`, {
+    method: "GET",
+  });
+  const data = await res.json();
+  const random = Math.floor(Math.random() * data.length);
+
+  return {
+    props: {
+      data: data[random],
+      time: now.toString(),
+    },
+    revalidate: 30,
+  };
+}
+*/
 
 /*
 [
