@@ -54,6 +54,7 @@ export default function Home({ data }) {
 }
 
 export async function getStaticProps() {
+  console.log("getStaticProps");
   const Address = process.env.API_ADDRESS;
   const params = { maxResults: 10 };
   const query = new URLSearchParams(params);
