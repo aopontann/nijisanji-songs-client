@@ -2,6 +2,7 @@ import Head from "next/head";
 import Header from "../components/header";
 import styled from "styled-components";
 import Link from "next/link";
+import SideBar from "../components/sideBar"
 
 export default function Home({ data }) {
   console.log("top画面作成中");
@@ -10,9 +11,15 @@ export default function Home({ data }) {
     flex-direction: column;
     justify-content: center;
   `;
+  const Div2 = styled.div`
+    display: flex;
+    justify-content: center;
+  `;
   const Main = styled.main`
     background-color: #eaf0f6;
     text-align: center;
+    width: 90%;
+    margin-top: 6rem;
   `;
   const H1 = styled.h1`
     text-align: center;
@@ -29,30 +36,26 @@ export default function Home({ data }) {
       </Head>
 
       <Header />
-      <Main>
-        <H1>Welcome to にじ歌まとめ(仮)</H1>
-        <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
-        <br />
-        <h2>おすすめ動画</h2>
-        <YouTube>
-          <iframe
-            width="560"
-            height="315"
-            src={`https://www.youtube.com/embed/${data.id}`}
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </YouTube>
-        <Link href="/vtuber">
-          <a>
-            <h2>
-              vtuber一覧(クリック)
-            </h2>
-          </a>
-        </Link>
-      </Main>
+      <Div2>
+        <SideBar />
+        <Main>
+          <H1>Welcome to にじ歌まとめ(仮)</H1>
+          <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
+          <br />
+          <h2>おすすめ動画</h2>
+          <YouTube>
+            <iframe
+              width="560"
+              height="315"
+              src={`https://www.youtube.com/embed/${data.id}`}
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </YouTube>
+        </Main>
+      </Div2>
     </Div>
   );
 }
