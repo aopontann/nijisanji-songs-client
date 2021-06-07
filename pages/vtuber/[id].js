@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Head from "next/head";
 import styled from "styled-components";
 import Header from "../../components/header";
 import { getAllVtuberNames, getVtuberInfo } from "../../lib/vtuber";
@@ -12,6 +13,9 @@ export default function Post({ data, now }) {
     justify-content: center;
     margin: 0rem;
     padding: 0rem;
+  `;
+  const Main = styled.main`
+    margin-top: 6rem;
   `;
   const H1 = styled.h1`
     margin-left: 1rem;
@@ -52,45 +56,50 @@ export default function Post({ data, now }) {
   const vtuberInfo = data[0];
   return (
     <Div>
+      <Head>
+        <title>{vtuberInfo.name}</title>
+      </Head>
+
       <Header />
-      <H1>{vtuberInfo.name}</H1>
-      <P_time>{`更新時間: ${now}(10分おき更新)`}</P_time>
-      <H2>歌</H2>
-      <Ul>
-        {vtuberInfo.songVtuber.map((joinVideo) => {
-          if (joinVideo.role == "歌") {
-            return (
-              <a
-                target="_blank"
-                href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}
-              >
-                <Li>
-                  <Img src={joinVideo.videos.thumbnail.medium} />
-                  <P>{joinVideo.videos.title}</P>
-                </Li>
-              </a>
-            );
-          }
-        })}
-      </Ul>
-      <H2>歌以外</H2>
-      <Ul>
-        {vtuberInfo.songVtuber.map((joinVideo) => {
-          if (joinVideo.role != "歌") {
-            return (
-              <a
-                target="_blank"
-                href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}
-              >
-                <Li>
-                  <Img src={joinVideo.videos.thumbnail.medium} />
-                  <P>{joinVideo.videos.title}</P>
-                </Li>
-              </a>
-            );
-          }
-        })}
-      </Ul>
+      <Main>
+        <H1>{vtuberInfo.name}</H1>
+        <P_time>{`更新時間: ${now}(10分おき更新)`}</P_time>
+        <H2>歌</H2>
+        <Ul>
+          {vtuberInfo.songVtuber.map((joinVideo) => {
+            if (joinVideo.role == "歌") {
+              return (
+                <a
+                  target="_blank"
+                  href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}
+                >
+                  <Li>
+                    <Img src={joinVideo.videos.thumbnail.medium} />
+                    <P>{joinVideo.videos.title}</P>
+                  </Li>
+                </a>
+              );
+            }
+          })}
+        </Ul>
+        <Ul>
+          {vtuberInfo.songVtuber.map((joinVideo) => {
+            if (joinVideo.role != "歌") {
+              return (
+                <a
+                  target="_blank"
+                  href={`https://www.youtube.com/watch?v=${joinVideo.videoId}`}
+                >
+                  <Li>
+                    <Img src={joinVideo.videos.thumbnail.medium} />
+                    <P>{joinVideo.videos.title}</P>
+                  </Li>
+                </a>
+              );
+            }
+          })}
+        </Ul>
+      </Main>
     </Div>
   );
 }
@@ -114,7 +123,7 @@ export async function getStaticPaths() {
   */
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 }
 

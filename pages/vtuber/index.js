@@ -13,6 +13,7 @@ export default function VtuberList({ data }) {
   `;
   const Main = styled.main`
     background-color: #eaf0f6;
+    margin-top: 6rem;
   `;
   const H2 = styled.h2`
     text-align: center;
