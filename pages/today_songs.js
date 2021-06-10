@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import styled from "styled-components";
-import { get_time } from "../lib/get_times";
+import { get_time, toDatetime } from "../lib/get_times";
 
 const H1 = styled.h1``;
 const Ul = styled.div`
@@ -16,7 +16,9 @@ const Video = styled.li`
   margin-top: 0.5rem;
   width: 30rem;
 `;
-const Img = styled.img``;
+const Img = styled.img`
+  margin-top: 1rem;
+`;
 const P = styled.p`
   margin: 0.5rem;
 `;
@@ -28,6 +30,10 @@ export default function Home({ data }) {
       {data.length > 0 ? (
         <Ul>
           {data.map((dt) => {
+            const startTime = toDatetime({
+              time: dt.startTime,
+              format: "公開時間: HH時mm分"
+            })
             return (
               <Video>
                 <a
@@ -37,6 +43,7 @@ export default function Home({ data }) {
                   <Img src={dt.thumbnail.medium} />
                 </a>
                 <P>{dt.title}</P>
+                <P>{startTime}</P>
               </Video>
             );
           })}
@@ -61,6 +68,7 @@ export async function getStaticProps() {
     startAtAfter: today_first + "Z",
     startAtBefore: today_last + "Z",
   };
+  
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
