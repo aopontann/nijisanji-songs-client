@@ -113,7 +113,7 @@ export async function getStaticProps({ params }) {
   console.log("params.id", params.id || "error!!!");
   const data = await getVtuberInfo(params.id);
   console.log("data", data);
-  const now = get_time("Asia/Tokyo", 0);
+  const now = get_time();
   return {
     props: {
       data,
