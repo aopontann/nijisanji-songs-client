@@ -31,7 +31,7 @@ export default function Home({ data }) {
 
 export async function getStaticProps() {
   const Address = process.env.API_ADDRESS;
-  const params = { maxResults: 30 };
+  const params = { maxResults: 30, songConfirm: true };
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
