@@ -27,6 +27,11 @@ export default function SideBar() {
           <P>ライバー 一覧</P>
         </a>
       </Link>
+      <Link href="/ranking">
+        <a>
+          <P>ランキング</P>
+        </a>
+      </Link>
     </Side>
   );
 }
