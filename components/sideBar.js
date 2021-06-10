@@ -32,6 +32,11 @@ export default function SideBar() {
           <P>ランキング</P>
         </a>
       </Link>
+      <Link href="/today_songs">
+        <a>
+          <P>今日公開動画</P>
+        </a>
+      </Link>
     </Side>
   );
 }
