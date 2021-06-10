@@ -20,6 +20,9 @@ const Img = styled.img``;
 const P = styled.p`
   margin: 0.5rem;
 `;
+const P_page = styled.p`
+  text-decoration:underline;
+`;
 
 export default function Home({ data }) {
   const [videos, setVideo] = useState(data.slice(0, 50));
@@ -47,16 +50,16 @@ export default function Home({ data }) {
   return (
     <Layout>
       <H1>累計視聴回数ランキング</H1>
-      <p onClick={pageUp}>
+      <P_page onClick={pageUp}>
         {rank + 51 < data.length
           ? `next(${rank + 51}位 ~ ${rank + 100}位)`
           : ""}
-      </p>
-      <p onClick={pageDown}>
+      </P_page>
+      <P_page onClick={pageDown}>
         {rank == 0
           ? ""
           : `back(${rank - 50 + 1}位 ~ ${rank})位`}
-      </p>
+      </P_page>
       <Ul>
         {videos.map((dt) => {
           return (
