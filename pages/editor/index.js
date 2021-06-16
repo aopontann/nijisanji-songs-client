@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Layout from "../../components/Layout";
 import { useState } from "react";
+import VideoInfo from "./videoInfo";
 
 const H1 = styled.h1`
   text-align: center;
@@ -50,7 +51,7 @@ export default function Edit() {
     setVideo([...data]);
   };
   const delete_videos = async() => {
-    
+
   }
 
   return (
@@ -72,18 +73,7 @@ export default function Edit() {
       <Ul>
         {videos.map((dt) => {
           return (
-            <Video>
-              <a
-                target="_blank"
-                href={`https://www.youtube.com/watch?v=${dt.id}`}
-              >
-                <Img src={dt.thumbnail.medium} />
-              </a>
-              <VideoControl>
-                <p>{dt.title}</p>
-                <p>削除</p>
-              </VideoControl>
-            </Video>
+            <VideoInfo data={dt}/>
           )
         })}
       </Ul>
