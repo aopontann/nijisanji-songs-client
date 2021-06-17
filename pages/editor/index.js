@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Layout from "../../components/Layout";
 import { useState } from "react";
-import VideoInfo from "./videoInfo";
+import VideoInfo from "../../components/videoInfo";
 import { get_time } from "../../lib/get_times";
 
 const H1 = styled.h1`
