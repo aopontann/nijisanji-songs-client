@@ -4,7 +4,6 @@ import styled from "styled-components";
 import SideBar from "../components/sideBar"
 
 export default function Home({ children }) {
-  console.log("top画面作成中");
   const Div = styled.div`
     display: flex;
     flex-direction: column;
