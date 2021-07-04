@@ -17,6 +17,7 @@ const Ul = styled.div`
 
 let search_songConfirm = true;
 let search_checkSongVtuber = true;
+let button_dis = false;
 
 export default function Edit() {
   const Address = "http://localhost:8081";
@@ -29,6 +30,7 @@ export default function Edit() {
   );
 
   const get_videos = async () => {
+    button_dis = true;
     const params = {
       songConfirm: search_songConfirm,
       checkSongVtuber: search_checkSongVtuber,
@@ -43,6 +45,7 @@ export default function Edit() {
     });
     const data = await res.json();
     console.log("data", data);
+    button_dis = false;
     setVideo([...data]);
   };
 
@@ -78,9 +81,9 @@ export default function Edit() {
         </option>
       </select>
       <br />
-      <input type="text" defaultValue={startAtAfter} onBlur={ (e) => { setStartAtAfter(e.target.value) }}/>
-      <input type="text" defaultValue={startAtBefore} onBlur={ (e) => { setStartAtBefore(e.target.value) }}/>
-      <button onClick={get_videos}>取得</button>
+      公開日:<input type="text" defaultValue={startAtAfter} onBlur={ (e) => { setStartAtAfter(e.target.value) }}/>
+       ~<input type="text" defaultValue={startAtBefore} onBlur={ (e) => { setStartAtBefore(e.target.value) }}/>
+      <input type="submit" value="検索" onClick={get_videos} disabled={button_dis}/>
       <Ul>
         {videos.map((dt) => {
           return <VideoInfo data={dt} />;
