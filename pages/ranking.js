@@ -2,8 +2,18 @@ import Layout from "../components/Layout";
 import { useState } from "react";
 import { Box } from "@material-ui/core";
 import ImgMediaCard from "../components/card";
+import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+    textAlign: "center"
+  },
+}));
 
 export default function Home({ data }) {
   const [videos, setVideo] = useState(data.slice(0, 50));
@@ -25,12 +35,16 @@ export default function Home({ data }) {
     }
   };
 
+  const classes = useStyles();
+
   return (
     <Layout>
       <Typography variant="h5">累計視聴回数ランキング</Typography>
-      <Button variant="outlined" onClick={pageDown}>Back</Button>
-      <Button variant="outlined" onClick={pageUp}>Next</Button>
       <Typography variant="h6" align="center">{`${(page-1)*50+1}位 〜 ${(page)*50}位`}</Typography>
+      <div className={classes.root}>
+        <Button variant="outlined" color="primary" onClick={pageDown}>Back</Button>
+        <Button variant="outlined" color="primary" onClick={pageUp}>Next</Button>
+      </div>
       <Box
         display="flex"
         flexWrap="wrap"
@@ -42,11 +56,15 @@ export default function Home({ data }) {
         {videos.map(video => {
           return (
             <Box m={1}>
-              <ImgMediaCard video={video} />
+              <ImgMediaCard video={video} type={'statistics'}/>
             </Box>
           )
         })}
       </Box>
+      <div className={classes.root}>
+        <Button variant="outlined" color="primary" onClick={pageDown}>Back</Button>
+        <Button variant="outlined" color="primary" onClick={pageUp}>Next</Button>
+      </div>
     </Layout>
   );
 }
