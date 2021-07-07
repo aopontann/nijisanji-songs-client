@@ -1,20 +1,18 @@
 import styled from "styled-components";
 import Layout from "../components/Layout";
+import Container from "@material-ui/core/Container";
+import { Box } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 
 export default function Home({ data }) {
-  const H1 = styled.h1`
-    text-align: center;
-  `;
-  const YouTube = styled.div`
-    text-align: center;
-  `;
   return (
     <Layout>
-      <H1>Welcome to にじ歌まとめ(仮)</H1>
-      <p>このサイトはにじさんじの歌ってみた動画をまとめたサイトです</p>
+      <Typography variant="h5">Welcome to にじ歌(仮)</Typography>
       <br />
-      <h2>おすすめ動画</h2>
-      <YouTube>
+      <Typography variant="h6" align="center">
+        おすすめ動画
+      </Typography>
+      <Box textAlign="center">
         <iframe
           width="560"
           height="315"
@@ -24,7 +22,7 @@ export default function Home({ data }) {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
-      </YouTube>
+      </Box>
     </Layout>
   );
 }
