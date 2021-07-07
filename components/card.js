@@ -11,6 +11,7 @@ import { Box } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Chip from "@material-ui/core/Chip";
+import { get_time, toDatetime } from "../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ImgMediaCard(props) {
   const classes = useStyles();
   const video = props.video;
+  const type = props.type; // "statistics", "startTime" 
+  const startTime = toDatetime({
+    time: video.startTime,
+    format: "公開時間: HH時mm分"
+  });
   /*
   const video = {
     id: "dNswz1kQUFo",
@@ -81,7 +87,9 @@ export default function ImgMediaCard(props) {
             <Box lineHeight={1}>{video.title}</Box>
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            視聴回数: {video.statistic.viewCount.toLocaleString()}
+            {type == 'statistics'
+              ? `視聴回数: ${video.statistic.viewCount.toLocaleString()}`
+              : `${startTime}` }
           </Typography>
           <div className={classes.tags}>
             <Chip size="small" label="Basic" />
