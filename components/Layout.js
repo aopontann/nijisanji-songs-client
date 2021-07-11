@@ -93,7 +93,7 @@ export default function PersistentDrawerLeft({children}) {
     setOpen(false);
   };
 
-  const tag_name = ['ホーム', '検索', '公開予定', 'ランキング', '問い合わせ']
+  const tag_name = ['ホーム', '検索', '公開予定', 'ランキング', '問い合わせ(準備中)']
   const tag_path = ["/", "/search", "today_songs", "ranking", "/"];
   const tag_icons = [(<Home />), (<SearchIcon />), (<Schedule />), (<Star />), (<Help />)]
 
