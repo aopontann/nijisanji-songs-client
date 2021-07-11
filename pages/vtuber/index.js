@@ -1,72 +1,54 @@
 import Link from "next/link";
 import styled from "styled-components";
 import Layout from "../../components/Layout";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
+import { Box } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+}));
 
 export default function VtuberList({ data }) {
-  const H2 = styled.h2`
-    text-align: center;
-  `;
-  const Ul = styled.ul`
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    justify-content: center;
-    margin-left: 3rem;
-  `;
-  const Li = styled.li`
-    width: 8rem;
-    height: 12rem;
-    background-color: white;
-    margin: 0.5rem;
-    text-align: center;
-    border-radius: 20px;
-  `;
-  const Image = styled.img`
-    width: 6rem;
-    height: 6rem;
-    border-radius: 9999px;
-    margin-top: 1rem;
-  `;
-  const Name = styled.p`
-    margin: 1rem;
-  `;
+  const classes = useStyles();
   return (
-    <Layout>
-      <H2>ライバー 一覧</H2>
-      <Ul>
-        {data.map((dt) => {
-          if (dt.affiliation == "にじさんじ") {
-            return (
-              <Link href={`/vtuber/${dt.name}`}>
-                <a>
-                  <Li>
-                    <Image src={dt.image || "/images/profile.jpg"} />
-                    <Name>{dt.name}</Name>
-                  </Li>
-                </a>
-              </Link>
-            );
-          }
-        })}
-      </Ul>
-      <H2>卒業したライバー</H2>
-      <Ul>
-        {data.map((dt) => {
-          if (dt.affiliation == "にじさんじ卒業") {
-            return (
-              <Link href={`/vtuber/${dt.name}`}>
-                <a>
-                  <Li>
-                    <Image src={dt.image || "/images/profile.jpg"} />
-                    <Name>{dt.name}</Name>
-                  </Li>
-                </a>
-              </Link>
-            );
-          }
-        })}
-      </Ul>
-    </Layout>
+      <Layout>
+        <Typography variant="h5">ライバー 一覧</Typography>
+        <Typography variant="h6" align="center">にじさんじ</Typography>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          p={1}
+          m={1}
+          bgcolor="background.paper"
+          justifyContent="center"
+        >
+          {data.map((vtuber) => {
+            if (vtuber.affiliation == "にじさんじ") {
+              return (
+                <div className={classes.root}>
+                  <Avatar alt="Remy Sharp" src={vtuber.image || "/images/profile.jpg"} className={classes.large} />
+                  <Typography variant="subtitle1">{vtuber.name}</Typography>
+                </div>
+              );
+            }
+          })}
+        </Box>
+      </Layout>
   );
 }
 
