@@ -1,13 +1,28 @@
 import Layout from "../components/Layout";
-import styled from "styled-components";
 import { get_time, toDatetime } from "../lib/get_times";
 import { useState } from "react";
 import { Box } from "@material-ui/core";
-import ImgMediaCard from "../components/card";
+import { Card, Link, CardMedia, CardContent } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+    textAlign: "center",
+  },
+  videos: {
+    width: 345 * 0.8,
+    height: 310 * 0.75,
+    margin: theme.spacing(0.5),
+  },
+}));
+
 export default function Home({ data }) {
+  const classes = useStyles();
   return (
     <Layout>
       <Typography variant="h5">今日公開予定歌動画</Typography>
@@ -15,15 +30,40 @@ export default function Home({ data }) {
         display="flex"
         flexWrap="wrap"
         p={1}
-        m={1}
+        m={0.2}
         bgcolor="background.paper"
         justifyContent="center"
       >
         {data.map((video) => {
+          const startTime = toDatetime({
+            time: video.startTime,
+            format: "公開時間: HH時mm分",
+          });
           return (
-            <Box m={1}>
-              <ImgMediaCard video={video} type={"startTime"} />
-            </Box>
+            <Card className={classes.videos}>
+              <Link
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                target="_blank"
+                rel="noopener"
+                underline="none"
+              >
+                <CardMedia
+                  component="img"
+                  alt={video.title}
+                  image={video.thumbnail.medium || ""}
+                  title={video.title}
+                />
+              </Link>
+
+              <CardContent>
+                <Typography noWrap={true}>
+                  <Box lineHeight={1}>{video.title}</Box>
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {startTime}
+                </Typography>
+              </CardContent>
+            </Card>
           );
         })}
       </Box>
@@ -57,7 +97,7 @@ export async function getStaticProps() {
     startAtAfter: today_first + "Z",
     startAtBefore: today_last + "Z",
   };
-
+  
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",

@@ -1,7 +1,6 @@
 import Layout from "../components/Layout";
 import React, { useState } from "react";
 import { Box } from "@material-ui/core";
-import ImgMediaCard from "../components/card";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import { Chip } from "@material-ui/core";
@@ -116,7 +115,7 @@ export default function Search(props) {
 
 export async function getStaticProps() {
   const Address = process.env.API_ADDRESS;
-  const params = { songConfirm: true, maxResults: 200, page: 1 };
+  const params = { songConfirm: true };
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",

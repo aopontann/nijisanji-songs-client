@@ -1,7 +1,8 @@
+import React from "react";
 import Layout from "../components/Layout";
 import { useState } from "react";
 import { Box } from "@material-ui/core";
-import ImgMediaCard from "../components/card";
+import { Card, Link, CardMedia, CardContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from '@material-ui/core/Button';
@@ -13,11 +14,23 @@ const useStyles = makeStyles((theme) => ({
     },
     textAlign: "center"
   },
+  videos: {
+    width: 345 * 0.8,
+    height: 310 * 0.75,
+    margin: theme.spacing(0.5)
+  },
 }));
 
-export default function Home({ data }) {
+export const RankingVideos = React.createContext();
+
+export default function Ranking({ data }) {
   const [videos, setVideo] = useState(data.slice(0, 50));
+  const videosValue = {
+    videos,
+    setVideo
+  }
   const [page, setPage] = useState(1);
+
 
   const pageUp = () => {
     console.log("up", page);
@@ -46,21 +59,44 @@ export default function Home({ data }) {
         <Button variant="outlined" color="primary" onClick={pageUp}>Next</Button>
       </div>
       <Box
-        display="flex"
-        flexWrap="wrap"
-        p={1}
-        m={1}
-        bgcolor="background.paper"
-        justifyContent="center"
-      >
-        {videos.map(video => {
-          return (
-            <Box m={1}>
-              <ImgMediaCard video={video} type={'statistics'}/>
-            </Box>
-          )
-        })}
-      </Box>
+      display="flex"
+      flexWrap="wrap"
+      p={1}
+      m={0.2}
+      bgcolor="background.paper"
+      justifyContent="center"
+    >
+      {videos.map((video) => {
+        return (
+          <Card className={classes.videos}>
+            <Link
+              href={`https://www.youtube.com/watch?v=${video.id}`}
+              target="_blank"
+              rel="noopener"
+              underline="none"
+            >
+              <CardMedia
+                component="img"
+                alt={video.title}
+                image={video.thumbnail.medium || ""}
+                title={video.title}
+              />
+            </Link>
+
+            <CardContent>
+              <Typography noWrap={true}>
+                <Box lineHeight={1}>{video.title}</Box>
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                
+                  {`視聴回数: ${video.statistic.viewCount.toLocaleString()}`}
+                  
+              </Typography>
+            </CardContent>
+          </Card>
+        );
+      })}
+    </Box>
       <div className={classes.root}>
         <Button variant="outlined" color="primary" onClick={pageDown}>Back</Button>
         <Button variant="outlined" color="primary" onClick={pageUp}>Next</Button>
