@@ -117,6 +117,7 @@ export async function getStaticProps() {
     method: "GET",
   });
   const data = res ? await res.json() : [];
+  res ? "" : console.error("today_songs fetch error");
 
   return {
     props: {

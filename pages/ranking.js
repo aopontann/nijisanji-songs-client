@@ -25,10 +25,6 @@ export const RankingVideos = React.createContext();
 
 export default function Ranking({ data }) {
   const [videos, setVideo] = useState(data.slice(0, 50));
-  const videosValue = {
-    videos,
-    setVideo
-  }
   const [page, setPage] = useState(1);
 
 
@@ -112,7 +108,8 @@ export async function getStaticProps() {
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
   });
-  const data = await res.json();
+  const data = res ? await res.json() : [];
+  res ? "" : console.error("ranking fetch error");
 
   return {
     props: {
