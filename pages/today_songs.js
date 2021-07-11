@@ -1,4 +1,5 @@
 import Layout from "../components/Layout";
+import useSWR from "swr";
 import { get_time, toDatetime } from "../lib/get_times";
 import { useState } from "react";
 import { Box } from "@material-ui/core";
@@ -91,18 +92,31 @@ export async function getStaticProps() {
   const today_last = get_time({
     format: "YYYY-MM-DDT23:59:59",
   });
-  
+
   const params = {
     songConfirm: true,
     startAtAfter: today_first + "Z",
     startAtBefore: today_last + "Z",
   };
-  
+
+  /*
+  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const { data, error } = useSWR(`${Address}/videos?${query}`, fetcher);
+  if (error) {
+    console.log("fetch error", error);
+    return {
+      props: {
+        data: [],
+      },
+      revalidate: 60 * 10,
+    };
+  }
+  */
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
   });
-  const data = await res.json();
+  const data = res ? await res.json() : [];
 
   return {
     props: {
