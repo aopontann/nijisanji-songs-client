@@ -4,30 +4,8 @@ import { get_time, toDatetime } from "../lib/get_times";
 import { useState } from "react";
 import { Box } from "@material-ui/core";
 import ImgMediaCard from "../components/card";
-import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
-import Button from '@material-ui/core/Button';
-
-const H1 = styled.h1``;
-const Ul = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  list-style: none;
-  align-items: center;
-`;
-const Video = styled.li`
-  background-color: white;
-  border-radius: 20px;
-  margin-top: 0.5rem;
-  width: 30rem;
-`;
-const Img = styled.img`
-  margin-top: 1rem;
-`;
-const P = styled.p`
-  margin: 0.5rem;
-`;
+import Button from "@material-ui/core/Button";
 
 export default function Home({ data }) {
   return (
@@ -41,15 +19,22 @@ export default function Home({ data }) {
         bgcolor="background.paper"
         justifyContent="center"
       >
-        {data.map(video => {
+        {data.map((video) => {
           return (
             <Box m={1}>
               <ImgMediaCard video={video} type={"startTime"} />
             </Box>
-          )
+          );
         })}
       </Box>
-  </Layout>
+      {data.length == 0 ? (
+        <Typography variant="body" align="center">{`現時点(${get_time({
+          format: "HH:mm",
+        })})ではないよ`}</Typography>
+      ) : (
+        ""
+      )}
+    </Layout>
   );
 }
 
@@ -66,12 +51,13 @@ export async function getStaticProps() {
   const today_last = get_time({
     format: "YYYY-MM-DDT23:59:59",
   });
+  
   const params = {
     songConfirm: true,
     startAtAfter: today_first + "Z",
     startAtBefore: today_last + "Z",
   };
-  
+
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
