@@ -1,5 +1,5 @@
 import Layout from "../components/Layout";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Box } from "@material-ui/core";
 import ImgMediaCard from "../components/card";
 import { makeStyles } from "@material-ui/styles";
@@ -11,6 +11,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { OutlinedInput } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import { FormHelperText } from "@material-ui/core";
+import VideoList from "../components/videoList";
+import EditTagDialog from "../components/editTagDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,18 +31,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+export const ContextVideos = React.createContext();
+
 export default function Search(props) {
-  const [videos, setVideo] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [DialogProps, setDialogProps] = React.useState({
+    open: false,
+    videoId: "",
+    tags: [],
+  });
+  const useStateVideos = {
+    videos,
+    setVideos,
+    DialogProps,
+    setDialogProps,
+  };
   const [search_tag, setSearch_tag] = useState("");
   const classes = useStyles();
 
   const handleChange = (event) => {
     const value = event.target.value || event.target.textContent;
     const reg = new RegExp(value);
-    const result = props.videos.filter((video) => video.title.match(reg));
-    value != "" ? setVideo([...result]) : setVideo([]);
+    const result = props.videos.filter(
+      (video) =>
+        video.title.match(reg) ||
+        video.tags.map((tagData) => tagData.tag.name).includes(value)
+    );
+    value != "" ? setVideos([...result]) : setVideos([]);
     setSearch_tag(value);
   };
+  console.log("レンダリング");
+  console.log(videos);
 
   return (
     <Layout>
@@ -57,10 +78,13 @@ export default function Search(props) {
             }}
             endAdornment={
               <Tooltip title="Delete">
-                <IconButton aria-label="delete" onClick={() => {
-                  setVideo([]);
-                  setSearch_tag("");
-                }}>
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => {
+                    setVideos([]);
+                    setSearch_tag("");
+                  }}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -82,22 +106,10 @@ export default function Search(props) {
           ""
         )}
       </Typography>
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        p={1}
-        m={0.2}
-        bgcolor="background.paper"
-        justifyContent="center"
-      >
-        {videos.map((video) => {
-          return (
-            <Box m={1}>
-              <ImgMediaCard video={video} type={"statistics"} />
-            </Box>
-          );
-        })}
-      </Box>
+      <ContextVideos.Provider value={useStateVideos}>
+        <VideoList />
+        <EditTagDialog />
+      </ContextVideos.Provider>
     </Layout>
   );
 }
@@ -121,7 +133,7 @@ export async function getStaticProps() {
       videos: data,
       tags: data_tags,
     },
-    revalidate: 60 * 10,
+    revalidate: 60,
   };
 }
 

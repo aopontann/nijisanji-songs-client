@@ -15,6 +15,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import SearchIcon from '@material-ui/icons/Search';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { Home ,People, Schedule, Star ,Help } from '@material-ui/icons'
@@ -92,9 +93,9 @@ export default function PersistentDrawerLeft({children}) {
     setOpen(false);
   };
 
-  const tag_name = ['ホーム', 'ライバー', '公開予定', 'ランキング', '問い合わせ']
-  const tag_path = ["/", "/vtuber", "today_songs", "ranking", "/"];
-  const tag_icons = [(<Home />), (<People />), (<Schedule />), (<Star />), (<Help />)]
+  const tag_name = ['ホーム', '検索', '公開予定', 'ランキング', '問い合わせ']
+  const tag_path = ["/", "/search", "today_songs", "ranking", "/"];
+  const tag_icons = [(<Home />), (<SearchIcon />), (<Schedule />), (<Star />), (<Help />)]
 
   return (
     <div className={classes.root}>
@@ -153,9 +154,7 @@ export default function PersistentDrawerLeft({children}) {
         })}
       >
         <div className={classes.drawerHeader} />
-        <Typography paragraph>
-          {children}
-        </Typography>
+        {children}
       </main>
     </div>
   );
