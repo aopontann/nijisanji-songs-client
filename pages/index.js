@@ -7,13 +7,17 @@ export default function Home({ data }) {
     <Layout>
       <Typography variant="h5">Welcome to にじ歌(仮)</Typography>
       <br />
+      <Typography variant="body">
+        このサイトは、にじさんじファンが作成したにじさんじの歌まとめサイトです
+      </Typography>
+      <br />
       <Typography variant="h6" align="center">
         おすすめ動画
       </Typography>
-      <Box textAlign="center">
+      <Box textAlign="center" m={2}>
         <iframe
-          width="560"
-          height="315"
+          width="336"
+          height="189"
           src={`https://www.youtube.com/embed/${data.id}`}
           title="YouTube video player"
           frameborder="0"
@@ -26,6 +30,7 @@ export default function Home({ data }) {
 }
 
 export async function getStaticProps() {
+  // width 560 h 315
   const Address = process.env.API_ADDRESS;
   const params = { maxResults: 30, songConfirm: true };
   const query = new URLSearchParams(params);
