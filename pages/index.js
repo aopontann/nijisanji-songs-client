@@ -5,12 +5,7 @@ import { Typography } from "@material-ui/core";
 export default function Home({ data }) {
   return (
     <Layout>
-      <Typography variant="h5">Welcome to にじ歌(仮)</Typography>
-      <br />
-      <Typography variant="body">
-        このサイトは、にじさんじファンが作成したにじさんじの歌まとめサイトです
-      </Typography>
-      <br />
+      <Typography variant="h5">Welcome to にじ歌まとめ(仮)</Typography>
       <Typography variant="h6" align="center">
         おすすめ動画
       </Typography>
