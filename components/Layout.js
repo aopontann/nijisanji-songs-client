@@ -166,9 +166,7 @@ export default function PersistentDrawerLeft({ children }) {
         <Divider />
         <List>
           <Link
-            href="https://forms.gle/kYDbQmG3H9aozaLy7"
-            target="_blank"
-            rel="noopener"
+            href="/contact"
           >
             <ListItem button key="問い合わせ">
               <ListItemIcon>
