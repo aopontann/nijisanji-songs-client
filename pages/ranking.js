@@ -108,13 +108,13 @@ export async function getStaticProps() {
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
   });
-  const data = res ? await res.json() : [];
-  res ? "" : console.error("ranking fetch error");
+  const data = res.status === 200 ? await res.json() : [];
+  res.status !== 200 ? console.error("ranking fetch error") : ""
 
   return {
     props: {
       data,
     },
-    revalidate: 60 * 10,
+    revalidate: 60,
   };
 }

@@ -116,8 +116,7 @@ export async function getStaticProps() {
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
   });
-  const data = res ? await res.json() : [];
-  res ? "" : console.error("today_songs fetch error");
+  const data = res.status === 200 ? await res.json() : [];
 
   return {
     props: {
