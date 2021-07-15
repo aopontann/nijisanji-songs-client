@@ -120,13 +120,13 @@ export async function getStaticProps() {
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
   });
-  const data = res ? await res.json() : [];
+  const data = res.status === 200 ? await res.json() : [];
   res ? "" : console.error("search fetch error");
 
   const res_tags = await fetch(`${Address}/tags?`, {
     method: "GET",
   });
-  const data_tags = res_tags ? await res_tags.json() : [];
+  const data_tags = res_tags === 200 ? await res_tags.json() : [];
   res_tags ? "" : console.error("search fetch error");
 
   return {

@@ -32,13 +32,23 @@ export async function getStaticProps() {
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
   });
+  console.log("res_status", res.status);
   const data = await res.json();
   const random = Math.floor(Math.random() * data.length);
 
+  if (res.status !== 200) {
+    return {
+      props: {
+        data: [],
+      },
+      revalidate: 60,
+    };
+  }
+  
   return {
     props: {
       data: data[random],
     },
-    revalidate: 60 * 10,
+    revalidate: 60,
   };
 }
