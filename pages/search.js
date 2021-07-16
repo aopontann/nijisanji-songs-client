@@ -14,12 +14,6 @@ import VideoList from "../components/videoList";
 import EditTagDialog from "../components/editTagDialog";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-    textAlign: "center",
-  },
   tags: {
     display: "flex",
     justifyContent: "center",
