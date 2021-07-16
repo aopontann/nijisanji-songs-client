@@ -1,19 +1,18 @@
-[にじ歌(仮)](https://nijisanji-songs-client.vercel.app)
+[にじ歌(仮)まとめ](https://nijisanji-songs-client.vercel.app)
 
 ## アプリケーション概要
-にじさんじライバーの歌ってみた動画を集計してまとめたWEBアプリケーション
+にじさんじライバーの歌ってみた動画をまとめて動画のランキングや検索ができるWEBアプリケーション
 
 ## 使用技術
 - React
 - Next.js
 - JavaScript
-- styled-components
+- material-ui
 
 ## 機能
-- ライバー一覧表示
-- ライバーごとに出演している動画を表示
 - 視聴回数のランキング順で動画を表示
 - 当日公開される動画を表示
+- 動画検索機能
 
 ## セットアップ
 .env作成
