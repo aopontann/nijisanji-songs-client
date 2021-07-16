@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import { Paper } from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -10,17 +10,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormControl } from "@material-ui/core";
-import { Input } from "@material-ui/core";
+import { InputLabel, OutlinedInput } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import { ContextVideos } from "../pages/search";
 import useSWR from "swr";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 345 * 0.8,
-    height: 310 * 0.8,
-  },
   chips: {
     display: "flex",
     justifyContent: "center",
@@ -32,16 +28,8 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     margin: theme.spacing(0.5),
   },
-  tags: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    "& > *": {
-      margin: theme.spacing(0.3),
-    },
-  },
-  addTag: {
-    margin: theme.spacing(0.3),
+  margin: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -63,11 +51,14 @@ export default function EditTagDialog() {
   };
 
   const handleAdd = () => {
+    addName !== ""
+    ?
     setDialogProps({
       open: DialogProps.open,
       videoId: DialogProps.videoId,
       tags: [...DialogProps.tags, { description: "", tag: { name: addName } }],
-    });
+    })
+    : ""
   };
 
   const handleDelete = (chipToDelete) => () => {
@@ -135,10 +126,12 @@ export default function EditTagDialog() {
       <DialogTitle id="form-dialog-title">tag編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          動画に出演しているライバーや、動画やイラスト提供している人の名前を編集できるよ
+          動画に出演しているライバー名や、動画やイラスト提供している人などの名前を追加できるよ
+          (動画に関係ないタグは追加しないでね)
         </DialogContentText>
-        <FormControl className={clsx(classes.addtag)}>
-          <Input
+        <FormControl className={classes.margin}>
+          <OutlinedInput
+            id="add-tag"
             onChange={handleChange}
             endAdornment={
               <IconButton onClick={handleAdd}>
@@ -147,8 +140,7 @@ export default function EditTagDialog() {
             }
           />
         </FormControl>
-        <br />
-        <DialogContentText align="center">保存するタグ</DialogContentText>
+        <Typography>保存するタグ</Typography>
         <Paper component="ui" className={classes.chips}>
           {DialogProps.tags.map((data) => {
             return (
