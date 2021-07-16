@@ -14,12 +14,6 @@ import VideoList from "../components/videoList";
 import EditTagDialog from "../components/editTagDialog";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-    textAlign: "center",
-  },
   tags: {
     display: "flex",
     justifyContent: "center",
@@ -90,7 +84,7 @@ export default function Search(props) {
             }
           />
           <FormHelperText id="outlined-weight-helper-text">
-            tag名やライバー名を入力してね
+            tag↓やライバー名、曲名を入力してね
           </FormHelperText>
         </FormControl>
         {videos.length == 0 ? (

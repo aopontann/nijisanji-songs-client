@@ -12,22 +12,17 @@ import Chip from "@material-ui/core/Chip";
 import EditIcon from "@material-ui/icons/Edit";
 import { get_time, toDatetime } from "../lib/get_times";
 
+// height: 310 * 0.87
 const useStyles = makeStyles((theme) => ({
   root: {
     width: 345 * 0.8,
-    height: 310 * 0.87,
     margin: theme.spacing(0.5)
   },
-  chips: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    listStyle: "none",
-    padding: theme.spacing(0.5),
-    margin: 0,
-  },
-  chip: {
-    margin: theme.spacing(0.5),
+  title: {
+    display: "-webkit-box",
+    overflow: "hidden",
+    "-webkit-line-clamp": 2,
+    "-webkit-box-orient": "vertical"
   },
   tags: {
     display: "flex",
@@ -94,8 +89,8 @@ export default function VideoList(props) {
             </Link>
 
             <CardContent>
-              <Typography noWrap={true}>
-                <Box lineHeight={1}>{video.title}</Box>
+              <Typography className={classes.title}>
+                <Box lineHeight={1.1}>{video.title}</Box>
               </Typography>
               <Typography variant="body2" color="textSecondary" component="p">
                 {type == "statistics"
@@ -108,7 +103,7 @@ export default function VideoList(props) {
                 )}
                 <Chip
                   size="small"
-                  label="tag"
+                  label="編集"
                   icon={<EditIcon />}
                   onClick={handleClickOpen(video)}
                 />
