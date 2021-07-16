@@ -84,7 +84,7 @@ export default function Search(props) {
             }
           />
           <FormHelperText id="outlined-weight-helper-text">
-            tag名やライバー名を入力してね
+            tag↓やライバー名、曲名を入力してね
           </FormHelperText>
         </FormControl>
         {videos.length == 0 ? (
