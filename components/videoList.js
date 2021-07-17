@@ -10,19 +10,20 @@ import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 import Chip from "@material-ui/core/Chip";
 import EditIcon from "@material-ui/icons/Edit";
+import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import { get_time, toDatetime } from "../lib/get_times";
 
 // height: 310 * 0.87
 const useStyles = makeStyles((theme) => ({
   root: {
     width: 345 * 0.8,
-    margin: theme.spacing(0.5)
+    margin: theme.spacing(0.5),
   },
   title: {
     display: "-webkit-box",
     overflow: "hidden",
     "-webkit-line-clamp": 2,
-    "-webkit-box-orient": "vertical"
+    "-webkit-box-orient": "vertical",
   },
   tags: {
     display: "flex",
@@ -41,12 +42,10 @@ export default function VideoList(props) {
   const { videos, setVideos, DialogProps, setDialogProps } =
     useContext(ContextVideos);
 
-  const handleClickOpen =
-    (video) =>
-    () => {
-      console.log("open", video);
-      setDialogProps({ open: true, videoId: video.id, tags: video.tags });
-    };
+  const handleClickOpen = (video) => () => {
+    console.log("open", video);
+    setDialogProps({ open: true, videoId: video.id, tags: video.tags });
+  };
 
   const handleClose = () => {
     setOpen({ open: false, videoId: "", tags: [] });
@@ -98,9 +97,13 @@ export default function VideoList(props) {
                   : `${startTime}`}
               </Typography>
               <div className={classes.tags}>
-                {video.tags.map(tagData => 
-                  <Chip label={tagData.tag.name} size="small" />
-                )}
+                {video.tags.map((tagData) => (
+                  <Chip
+                    icon={tagData.description == "歌唱" ? <MusicNoteIcon /> : ""}
+                    label={tagData.tag.name}
+                    size="small"
+                  />
+                ))}
                 <Chip
                   size="small"
                   label="編集"
