@@ -9,8 +9,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormControl } from "@material-ui/core";
-import { InputLabel, OutlinedInput } from "@material-ui/core";
+import { FormControl, NativeSelect, FormHelperText } from "@material-ui/core";
+import { OutlinedInput } from "@material-ui/core";
+import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import { ContextVideos } from "../pages/search";
@@ -36,14 +37,19 @@ const useStyles = makeStyles((theme) => ({
 export default function EditTagDialog() {
   const { videos, setVideos, DialogProps, setDialogProps } =
     useContext(ContextVideos);
-  const [addName, setAddName] = useState("");
+  const [addTag, setAddTag] = useState({name: "", description: "歌唱"});
   // DialogProps = {open: false, videoId: "", tags: []}
   const classes = useStyles();
 
   console.log("DialogProps", DialogProps);
+  console.log("addTag", addTag);
 
   const handleChange = (event) => {
-    setAddName(event.target.value);
+    setAddTag({name: event.target.value || addTag.name, description: addTag.description});
+  };
+
+  const handleChangeDesc = (event) => {
+    setAddTag({name: addTag.name, description: event.target.value || addTag.description});
   };
 
   const handleClose = () => {
@@ -51,14 +57,15 @@ export default function EditTagDialog() {
   };
 
   const handleAdd = () => {
-    addName !== ""
+    addTag.name !== ""
     ?
     setDialogProps({
       open: DialogProps.open,
       videoId: DialogProps.videoId,
-      tags: [...DialogProps.tags, { description: "", tag: { name: addName } }],
+      tags: [...DialogProps.tags, { description: addTag.description, tag: { name: addTag.name } }],
     })
     : ""
+    setAddTag({name: "", description: "歌唱"});
   };
 
   const handleDelete = (chipToDelete) => () => {
@@ -86,7 +93,7 @@ export default function EditTagDialog() {
           tags: DialogProps.tags.map((tagData) => {
             return {
               name: tagData.tag.name,
-              description: null,
+              description: tagData.description,
             };
           }),
         },
@@ -129,9 +136,17 @@ export default function EditTagDialog() {
           動画に出演しているライバー名や、動画やイラスト提供している人などの名前を追加できるよ
           (動画に関係ないタグは追加しないでね)
         </DialogContentText>
+        <FormControl>
+          <NativeSelect value={addTag.description} onChange={handleChangeDesc}>
+            <option value={"歌唱"}>歌唱</option>
+            <option value={"その他"}>その他</option>
+          </NativeSelect>
+          <FormHelperText>追加するタグの種類</FormHelperText>
+        </FormControl>
         <FormControl className={classes.margin}>
           <OutlinedInput
             id="add-tag"
+            value={addTag.name}
             onChange={handleChange}
             endAdornment={
               <IconButton onClick={handleAdd}>
@@ -147,6 +162,7 @@ export default function EditTagDialog() {
               <li>
                 <Chip
                   label={data.tag.name}
+                  icon={data.description == "歌唱" ? <MusicNoteIcon /> : ""}
                   className={classes.chip}
                   onDelete={handleDelete(data)}
                 />
