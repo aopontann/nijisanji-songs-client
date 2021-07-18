@@ -6,7 +6,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { ContextDialog } from "./editTagDialog";
 
 // ContextDialog.DialogProps = {open: false, videoId: "", tags: []}
-export default function SaveTag() {
+export default function SaveTag(props) {
   const { DialogProps, setDialogProps, saveState, setSaveState } = useContext(ContextDialog);
 
   const send_body = {
@@ -22,14 +22,14 @@ export default function SaveTag() {
       },
     ],
   };
-  const fetcher = fetch("http://localhost:8081/tags", {
+  const fetcher = (url) => fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(send_body),
-  });
-  const { data, error } = useSWR("http://localhost:8081/tags", fetcher);
+  }).then(res => res.json());
+  const { data, error } = useSWR(`${props.address}/tags`, fetcher);
 
   if (error) {
     return <ErrorIcon />
