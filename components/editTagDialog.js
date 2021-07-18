@@ -11,6 +11,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormControl, NativeSelect, FormHelperText } from "@material-ui/core";
 import { OutlinedInput } from "@material-ui/core";
+import ErrorIcon from '@material-ui/icons/Error';
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
@@ -166,11 +167,11 @@ export default function EditTagDialog(props) {
           >
             <SaveTag address={props.address}/>
           </ContextDialog.Provider>
-        ) : (
+        ) : saveState === "complete" ?(
           <Button onClick={handleClose} color="primary">
-            保存完了(閉じる)
+            {`保存完了(閉じる)${DialogProps.videoId}`}
           </Button>
-        )}
+        ) : <ErrorIcon />}
       </DialogActions>
     </Dialog>
   );
