@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const ContextDialog = React.createContext();
 
-export default function EditTagDialog() {
+export default function EditTagDialog(props) {
   const { videos, setVideos, DialogProps, setDialogProps } =
     useContext(ContextVideos);
   const [addTag, setAddTag] = useState({ name: "", description: "歌唱" });
@@ -164,7 +164,7 @@ export default function EditTagDialog() {
           <ContextDialog.Provider
             value={{ DialogProps, setDialogProps, saveState, setSaveState }}
           >
-            <SaveTag />
+            <SaveTag address={props.address}/>
           </ContextDialog.Provider>
         ) : (
           <Button onClick={handleClose} color="primary">
