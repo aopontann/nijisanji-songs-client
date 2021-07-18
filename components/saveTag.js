@@ -7,6 +7,7 @@ import { ContextDialog } from "./editTagDialog";
 
 // ContextDialog.DialogProps = {open: false, videoId: "", tags: []}
 export default function SaveTag(props) {
+  console.log("-------saveTag---------");
   const { DialogProps, setDialogProps, saveState, setSaveState } = useContext(ContextDialog);
 
   const send_body = {
@@ -29,10 +30,13 @@ export default function SaveTag(props) {
     },
     body: JSON.stringify(send_body),
   }).then(res => res.json());
-  const { data, error } = useSWR(`${props.address}/tags`, fetcher);
+  const { data, error, isValidating } = useSWR(saveState === "sending" ? `${props.address}/tags` : null, fetcher);
 
   if (error) {
     return <ErrorIcon />
+  }
+  if (isValidating) {
+    return <CircularProgress />
   }
   if (data) {
     // setDialogProps({open: false, videoId: "", tags: []});
