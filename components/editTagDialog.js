@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import clsx from "clsx";
+import SaveTag from "./saveTag";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import { Paper, Typography } from "@material-ui/core";
@@ -9,12 +9,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { FormControl } from "@material-ui/core";
-import { InputLabel, OutlinedInput } from "@material-ui/core";
+import { FormControl, NativeSelect, FormHelperText } from "@material-ui/core";
+import { OutlinedInput } from "@material-ui/core";
+import ErrorIcon from '@material-ui/icons/Error';
+import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import { ContextVideos } from "../pages/search";
-import useSWR from "swr";
 
 const useStyles = makeStyles((theme) => ({
   chips: {
@@ -33,32 +34,60 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EditTagDialog() {
+export const ContextDialog = React.createContext();
+
+export default function EditTagDialog(props) {
   const { videos, setVideos, DialogProps, setDialogProps } =
     useContext(ContextVideos);
-  const [addName, setAddName] = useState("");
+  const [addTag, setAddTag] = useState({ name: "", description: "歌唱" });
+  const [saveState, setSaveState] = useState("ready"); //ready, sending, complete
   // DialogProps = {open: false, videoId: "", tags: []}
   const classes = useStyles();
 
   console.log("DialogProps", DialogProps);
+  console.log("addTag", addTag);
+  console.log("saveState", saveState);
 
-  const handleChange = (event) => {
-    setAddName(event.target.value);
+  const handleChange = (target) => (event) => {
+    target == "name"
+      ? setAddTag({ name: event.target.value, description: addTag.description })
+      : "";
+    target == "description"
+      ? setAddTag({
+          name: addTag.name,
+          description: event.target.value || addTag.description,
+        })
+      : "";
   };
 
   const handleClose = () => {
+    saveState === "complete"
+      ? setVideos(
+          videos.map((video) => {
+            video.id == DialogProps.videoId
+              ? (video.tags = DialogProps.tags)
+              : "";
+            return video;
+          })
+        )
+      : "";
     setDialogProps({ open: false, videoId: "", tags: [] });
+    setAddTag({ name: "", description: "歌唱" });
+    setSaveState("ready");
   };
 
   const handleAdd = () => {
-    addName !== ""
-    ?
-    setDialogProps({
-      open: DialogProps.open,
-      videoId: DialogProps.videoId,
-      tags: [...DialogProps.tags, { description: "", tag: { name: addName } }],
-    })
-    : ""
+    addTag.name !== ""
+      ? setDialogProps({
+          open: DialogProps.open,
+          videoId: DialogProps.videoId,
+          tags: [
+            ...DialogProps.tags,
+            { description: addTag.description, tag: { name: addTag.name } },
+          ],
+        })
+      : "";
+    setAddTag({ name: "", description: "歌唱" });
   };
 
   const handleDelete = (chipToDelete) => () => {
@@ -70,51 +99,6 @@ export default function EditTagDialog() {
         (tagData) => tagData.tag.name !== chipToDelete.tag.name
       ),
     });
-  };
-
-  const handleSave = async () => {
-    setVideos(
-      videos.map((video) => {
-        video.id == DialogProps.videoId ? (video.tags = DialogProps.tags) : "";
-        return video;
-      })
-    );
-    const send_body = {
-      video_tags: [
-        {
-          videoId: DialogProps.videoId,
-          tags: DialogProps.tags.map((tagData) => {
-            return {
-              name: tagData.tag.name,
-              description: null,
-            };
-          }),
-        },
-      ],
-    };
-    const delete_res = await fetch(`http://localhost:8081/tags?videoId=${DialogProps.videoId}`, {
-      method: "DELETE",
-    }).then((res) => res.json());
-    const response = await fetch("http://localhost:8081/tags", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(send_body),
-    }).then((res) => res.json());
-    console.log(delete_res, response);
-    /*
-    const fetcher = (url) =>
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(send_body),
-      }).then((res) => res.json());
-    const { data, isValidating } = useSWR('http://localhost:8081/tags', fetcher);
-    */
-    setDialogProps({ open: false, videoId: "", tags: [] });
   };
 
   return (
@@ -129,10 +113,21 @@ export default function EditTagDialog() {
           動画に出演しているライバー名や、動画やイラスト提供している人などの名前を追加できるよ
           (動画に関係ないタグは追加しないでね)
         </DialogContentText>
+        <FormControl>
+          <NativeSelect
+            value={addTag.description}
+            onChange={handleChange("description")}
+          >
+            <option value={"歌唱"}>歌唱</option>
+            <option value={"その他"}>その他</option>
+          </NativeSelect>
+          <FormHelperText>追加するタグの種類</FormHelperText>
+        </FormControl>
         <FormControl className={classes.margin}>
           <OutlinedInput
             id="add-tag"
-            onChange={handleChange}
+            value={addTag.name}
+            onChange={handleChange("name")}
             endAdornment={
               <IconButton onClick={handleAdd}>
                 <AddIcon fontsize="small" />
@@ -147,6 +142,7 @@ export default function EditTagDialog() {
               <li>
                 <Chip
                   label={data.tag.name}
+                  icon={data.description == "歌唱" ? <MusicNoteIcon /> : ""}
                   className={classes.chip}
                   onDelete={handleDelete(data)}
                 />
@@ -156,12 +152,26 @@ export default function EditTagDialog() {
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          キャンセル
-        </Button>
-        <Button onClick={handleSave} color="primary">
-          保存
-        </Button>
+        {saveState !== "complete" ? (
+          <Button onClick={handleClose} color="primary">
+            キャンセル
+          </Button>
+        ) : ""}
+        {saveState === "ready" ? (
+          <Button onClick={() => setSaveState("sending")} color="primary">
+            保存
+          </Button>
+        ) : saveState === "sending" ? (
+          <ContextDialog.Provider
+            value={{ DialogProps, setDialogProps, saveState, setSaveState }}
+          >
+            <SaveTag address={props.address}/>
+          </ContextDialog.Provider>
+        ) : saveState === "complete" ?(
+          <Button onClick={handleClose} color="primary">
+            {`保存完了(閉じる)${DialogProps.videoId}`}
+          </Button>
+        ) : <ErrorIcon />}
       </DialogActions>
     </Dialog>
   );

@@ -101,7 +101,7 @@ export default function Search(props) {
       </Typography>
       <ContextVideos.Provider value={useStateVideos}>
         <VideoList />
-        <EditTagDialog />
+        <EditTagDialog address={props.address}/>
       </ContextVideos.Provider>
     </Layout>
   );
@@ -127,6 +127,7 @@ export async function getStaticProps() {
     props: {
       videos: data,
       tags: data_tags,
+      address: Address
     },
     revalidate: 60,
   };
