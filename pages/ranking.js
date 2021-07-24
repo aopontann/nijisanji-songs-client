@@ -35,8 +35,10 @@ export default function Ranking({ data }) {
 
   const pageUp = () => {
     console.log("up", page);
-    setVideo(data.slice(page * 50, (page + 1) * 50));
-    setPage(page + 1);
+    if(page*50 < data.length) {
+      setVideo(data.slice(page * 50, (page + 1) * 50));
+      setPage(page + 1);
+    }
   };
   const pageDown = () => {
     console.log("down", page);
@@ -116,7 +118,7 @@ export default function Ranking({ data }) {
 
 export async function getStaticProps() {
   const Address = process.env.API_ADDRESS;
-  const params = { songConfirm: true, maxResults: 200, page: 1 };
+  const params = { songConfirm: true, page: 1 };
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
