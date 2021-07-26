@@ -27,14 +27,8 @@ const useStyles = makeStyles((theme) => ({
 export const ContextVideos = React.createContext();
 
 export default function Search(props) {
-  const [search_tag, setSearch_tag] = useState("KING");
-  const [videos, setVideos] = useState(
-    props.videos.filter(
-      (video) =>
-        video.title.match(new RegExp(search_tag)) ||
-        video.tags.map((tagData) => tagData.tag.name).includes(search_tag)
-    )
-  );
+  const [search_tag, setSearch_tag] = useState("");
+  const [videos, setVideos] = useState([]);
   const [DialogProps, setDialogProps] = React.useState({
     open: false,
     videoId: "",
