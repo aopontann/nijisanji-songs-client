@@ -15,7 +15,7 @@ import ErrorIcon from '@material-ui/icons/Error';
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
-import { ContextVideos } from "../pages/search";
+import { ContextVideos } from "../pages";
 
 const useStyles = makeStyles((theme) => ({
   chips: {
@@ -169,7 +169,7 @@ export default function EditTagDialog(props) {
           </ContextDialog.Provider>
         ) : saveState === "complete" ?(
           <Button onClick={handleClose} color="primary">
-            {`保存完了(閉じる)${DialogProps.videoId}`}
+            {`保存完了(閉じる)`}
           </Button>
         ) : <ErrorIcon />}
       </DialogActions>

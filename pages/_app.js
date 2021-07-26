@@ -21,6 +21,7 @@ export default function MyApp(props) {
       <Head>
         <title>にじ歌まとめ(仮)</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <meta name="description" content="にじさんじの歌動画をまとめたサイトです" />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
