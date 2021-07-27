@@ -97,7 +97,7 @@ export default function PersistentDrawerLeft({ children }) {
   const tag_name = [
     "ホーム",
     "このサイトについて",
-    "公開予定(修正中)",
+    "公開予定",
     "ランキング",
   ];
   const tag_path = ["/", "/about", "today_songs", "ranking"];
