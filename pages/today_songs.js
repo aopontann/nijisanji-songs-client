@@ -20,6 +20,12 @@ const useStyles = makeStyles((theme) => ({
     height: 310 * 0.75,
     margin: theme.spacing(0.5),
   },
+  title: {
+    display: "-webkit-box",
+    overflow: "hidden",
+    "-webkit-line-clamp": 2,
+    "-webkit-box-orient": "vertical",
+  },
 }));
 
 export default function Home({ data }) {
@@ -57,8 +63,8 @@ export default function Home({ data }) {
               </Link>
 
               <CardContent>
-                <Typography noWrap={true}>
-                  <Box lineHeight={1}>{video.title}</Box>
+                <Typography className={classes.title}>
+                  <Box lineHeight={1.1}>{video.title}</Box>
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {startTime}
@@ -99,19 +105,6 @@ export async function getStaticProps() {
     startAtBefore: today_last + "Z",
   };
 
-  /*
-  const fetcher = (url) => fetch(url).then((res) => res.json());
-  const { data, error } = useSWR(`${Address}/videos?${query}`, fetcher);
-  if (error) {
-    console.log("fetch error", error);
-    return {
-      props: {
-        data: [],
-      },
-      revalidate: 60 * 10,
-    };
-  }
-  */
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
     method: "GET",
