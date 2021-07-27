@@ -1,19 +1,44 @@
 import Layout from "../components/Layout";
 import React, { useState } from "react";
-import { Box } from "@material-ui/core";
+import { Box, Card, CardContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import { Chip } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
+import Search from "@material-ui/icons/Search";
+import { Divider } from "@material-ui/core";
+import { InputBase } from "@material-ui/core";
 import Tooltip from "@material-ui/core/Tooltip";
 import { OutlinedInput } from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import { FormHelperText } from "@material-ui/core";
+import {
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+} from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
 import VideoList from "../components/videoList";
 import EditTagDialog from "../components/editTagDialog";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    maxWidth: 700,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
   tags: {
     display: "flex",
     justifyContent: "center",
@@ -22,11 +47,20 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.3),
     },
   },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap",
+    listStyle: "none",
+    padding: theme.spacing(0.5),
+  },
+  chip: {
+    margin: theme.spacing(0.5),
+  },
 }));
 
 export const ContextVideos = React.createContext();
 
-export default function Search(props) {
+export default function Home(props) {
   const [search_tag, setSearch_tag] = useState("");
   const [videos, setVideos] = useState([]);
   const [DialogProps, setDialogProps] = React.useState({
@@ -34,6 +68,7 @@ export default function Search(props) {
     videoId: "",
     tags: [],
   });
+  const [checkState, setCheckState] = useState(true);
   const useStateVideos = {
     videos,
     setVideos,
@@ -42,60 +77,110 @@ export default function Search(props) {
   };
   const classes = useStyles();
 
-  const handleChange = (event) => {
+  const searchClick = () => {
+    const reg = new RegExp(search_tag);
+    const result = props.videos.filter(
+      (video) =>
+        video.title.match(reg) ||
+        (checkState ? video.description.match(reg) : false) ||
+        video.tags.map((tagData) => tagData.tag.name).includes(search_tag)
+    );
+    search_tag != "" ? setVideos([...result]) : setVideos([]);
+  };
+
+  const searchChange = (event) => {
     const value = event.target.value || event.target.textContent;
+    setSearch_tag(value);
+  };
+
+  const searchDelete = () => {
+    setSearch_tag("");
+    setVideos([]);
+  };
+
+  const tagClick = (event) => {
+    const value = event.target.textContent;
     const reg = new RegExp(value);
     const result = props.videos.filter(
       (video) =>
         video.title.match(reg) ||
+        (checkState ? video.description.match(reg) : false) ||
         video.tags.map((tagData) => tagData.tag.name).includes(value)
     );
     value != "" ? setVideos([...result]) : setVideos([]);
     setSearch_tag(value);
   };
 
+  const checkBoxChange = (event) => {
+    setCheckState(event.target.checked);
+  };
+
   return (
     <Layout>
-      <Typography component="div" align="center">
-        <FormControl variant="outlined" style={{ margin: "1rem" }}>
-          <OutlinedInput
-            id="outlined-adornment-weight"
+      <Paper component="div" style={{ height: "5.2rem", maxWidth: "700px", marginBottom: "2rem" }}>
+        <Paper component="form" className={classes.root}>
+          <InputBase
+            className={classes.input}
+            placeholder="曲名,ライバー名,タグ..."
+            inputProps={{ "aria-label": "Search Videos" }}
             value={search_tag}
-            onChange={handleChange}
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{
-              "aria-label": "weight",
-            }}
-            endAdornment={
-              <Tooltip title="Delete">
-                <IconButton
-                  aria-label="delete"
-                  onClick={() => {
-                    setVideos([]);
-                    setSearch_tag("");
-                  }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            }
+            onChange={searchChange}
           />
-          <FormHelperText id="outlined-weight-helper-text">
-            tagやライバー名、曲名を入力してね
-          </FormHelperText>
-        </FormControl>
-        {videos.length == 0 ? (
-          <div className={classes.tags}>
-            {props.tags.map((tag) => {
-              return (
-                <Chip size="small" label={tag.name} onClick={handleChange} />
-              );
-            })}
-          </div>
-        ) : (
-          ""
-        )}
-      </Typography>
+          <IconButton
+            type="submit"
+            className={classes.iconButton}
+            aria-label="search"
+            onClick={searchClick}
+          >
+            <Search />
+          </IconButton>
+          <Divider className={classes.divider} orientation="vertical" />
+          <IconButton
+            className={classes.iconButton}
+            aria-label="directions"
+            onClick={searchDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Paper>
+        <FormControlLabel
+          style={{ marginLeft: "2px" }}
+          control={
+            <Checkbox
+              checked={checkState}
+              onChange={checkBoxChange}
+              color="primary"
+            />
+          }
+          label="概要欄も含める"
+        />
+      </Paper>
+      {videos.length == 0 ? (
+        <Card style={{ maxWidth: "700px" }}>
+          <CardContent>
+            <Typography variant="body2" component="p" gutterBottom>
+              タグ
+            </Typography>
+            <Typography component="ui" className={classes.chips}>
+              {props.tags.map((tag) => {
+                return (
+                  <li>
+                    <Chip
+                      size="small"
+                      className={classes.chip}
+                      label={tag.name}
+                      onClick={tagClick}
+                    />
+                  </li>
+                );
+              })}
+            </Typography>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
+      )}
+
       <ContextVideos.Provider value={useStateVideos}>
         <VideoList />
         <EditTagDialog address={props.address} />
