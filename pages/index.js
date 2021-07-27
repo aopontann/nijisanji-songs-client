@@ -78,14 +78,15 @@ export default function Home(props) {
   const classes = useStyles();
 
   const searchClick = () => {
+    console.log("CLICK!!!!!");
     const reg = new RegExp(search_tag);
-    const result = props.videos.filter(
+    const result = search_tag ? props.videos.filter(
       (video) =>
         video.title.match(reg) ||
         (checkState ? video.description.match(reg) : false) ||
         video.tags.map((tagData) => tagData.tag.name).includes(search_tag)
-    );
-    search_tag != "" ? setVideos([...result]) : setVideos([]);
+    ) : []
+    setVideos([...result]);
   };
 
   const searchChange = (event) => {
@@ -115,6 +116,8 @@ export default function Home(props) {
     setCheckState(event.target.checked);
   };
 
+  console.log("search_tag", search_tag);
+
   return (
     <Layout>
       <Paper component="div" style={{ height: "5.2rem", maxWidth: "700px", marginBottom: "2rem" }}>
@@ -127,7 +130,6 @@ export default function Home(props) {
             onChange={searchChange}
           />
           <IconButton
-            type="submit"
             className={classes.iconButton}
             aria-label="search"
             onClick={searchClick}
@@ -137,7 +139,7 @@ export default function Home(props) {
           <Divider className={classes.divider} orientation="vertical" />
           <IconButton
             className={classes.iconButton}
-            aria-label="directions"
+            aria-label="delete"
             onClick={searchDelete}
           >
             <DeleteIcon />
