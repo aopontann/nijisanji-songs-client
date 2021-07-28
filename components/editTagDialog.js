@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import { Paper, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { Card, CardContent } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -11,7 +12,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { FormControl, NativeSelect, FormHelperText } from "@material-ui/core";
 import { OutlinedInput } from "@material-ui/core";
-import ErrorIcon from '@material-ui/icons/Error';
+import ErrorIcon from "@material-ui/icons/Error";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
@@ -44,9 +45,11 @@ export default function EditTagDialog(props) {
   // DialogProps = {open: false, videoId: "", tags: []}
   const classes = useStyles();
 
+  /*
   console.log("DialogProps", DialogProps);
   console.log("addTag", addTag);
   console.log("saveState", saveState);
+  */
 
   const handleChange = (target) => (event) => {
     target == "name"
@@ -107,10 +110,9 @@ export default function EditTagDialog(props) {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">tag編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          動画に出演しているライバー名や、動画やイラスト提供している人などの名前を追加できるよ
+          動画に出演しているライバー名や、動画やイラスト提供者などの名前を追加できるよ
           (動画に関係ないタグは追加しないでね)
         </DialogContentText>
         <FormControl>
@@ -126,6 +128,7 @@ export default function EditTagDialog(props) {
         <FormControl className={classes.margin}>
           <OutlinedInput
             id="add-tag"
+            placeholder="追加するタグ名"
             value={addTag.name}
             onChange={handleChange("name")}
             endAdornment={
@@ -135,28 +138,37 @@ export default function EditTagDialog(props) {
             }
           />
         </FormControl>
-        <Typography>保存するタグ</Typography>
-        <Paper component="ui" className={classes.chips}>
-          {DialogProps.tags.map((data) => {
-            return (
-              <li>
-                <Chip
-                  label={data.tag.name}
-                  icon={data.description == "歌唱" ? <MusicNoteIcon /> : ""}
-                  className={classes.chip}
-                  onDelete={handleDelete(data)}
-                />
-              </li>
-            );
-          })}
-        </Paper>
+        <Card style={{ maxWidth: "700px" }}>
+          <CardContent>
+            <Typography variant="body2" component="p" gutterBottom>
+              タグ
+            </Typography>
+            <Typography component="ui" className={classes.chips}>
+              {DialogProps.tags.map((data) => {
+                return (
+                  <li>
+                    <Chip
+                      label={data.tag.name}
+                      size="small"
+                      icon={data.description == "歌唱" ? <MusicNoteIcon /> : ""}
+                      className={classes.chip}
+                      onDelete={handleDelete(data)}
+                    />
+                  </li>
+                );
+              })}
+            </Typography>
+          </CardContent>
+        </Card>
       </DialogContent>
       <DialogActions>
         {saveState !== "complete" ? (
           <Button onClick={handleClose} color="primary">
             キャンセル
           </Button>
-        ) : ""}
+        ) : (
+          ""
+        )}
         {saveState === "ready" ? (
           <Button onClick={() => setSaveState("sending")} color="primary">
             保存
@@ -165,13 +177,15 @@ export default function EditTagDialog(props) {
           <ContextDialog.Provider
             value={{ DialogProps, setDialogProps, saveState, setSaveState }}
           >
-            <SaveTag address={props.address}/>
+            <SaveTag address={props.address} />
           </ContextDialog.Provider>
-        ) : saveState === "complete" ?(
+        ) : saveState === "complete" ? (
           <Button onClick={handleClose} color="primary">
             {`保存完了(閉じる)`}
           </Button>
-        ) : <ErrorIcon />}
+        ) : (
+          <ErrorIcon />
+        )}
       </DialogActions>
     </Dialog>
   );
