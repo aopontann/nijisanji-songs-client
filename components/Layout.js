@@ -16,9 +16,6 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import SearchIcon from "@material-ui/icons/Search";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { Home, People, Schedule, Star, Help } from "@material-ui/icons";
 import Link from "next/link";
 
@@ -181,7 +178,7 @@ export default function PersistentDrawerLeft({ children }) {
         })}
       >
         <div className={classes.drawerHeader} />
-        {children}
+          {children}
       </main>
     </div>
   );
