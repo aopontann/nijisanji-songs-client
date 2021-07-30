@@ -1,20 +1,24 @@
 import React, { useContext } from "react";
 import useSWR from "swr";
+import { useRecoilState } from "recoil";
 import DoneIcon from '@material-ui/icons/Done';
 import ErrorIcon from '@material-ui/icons/Error';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { ContextDialog } from "./editTagDialog";
+import { dialogOpenState, dialogVideoIdState, dialogTagsState, saveTagsState } from "../src/atoms";
 
 // ContextDialog.DialogProps = {open: false, videoId: "", tags: []}
 export default function SaveTag(props) {
   console.log("-------saveTag---------");
-  const { DialogProps, setDialogProps, saveState, setSaveState } = useContext(ContextDialog);
+  const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState);
+  const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState);
+  const [dialogTags, setDialogTags] = useRecoilState(dialogTagsState);
+  const [saveState, setSaveState] = useRecoilState(saveTagsState);
 
   const send_body = {
     video_tags: [
       {
-        videoId: DialogProps.videoId,
-        tags: DialogProps.tags.map((tagData) => {
+        videoId: dialogVideoId,
+        tags: dialogTags.map((tagData) => {
           return {
             name: tagData.tag.name,
             description: tagData.description,
@@ -30,7 +34,7 @@ export default function SaveTag(props) {
     },
     body: JSON.stringify(send_body),
   }).then(res => res.json());
-  const { data, error, isValidating } = useSWR(saveState === "sending" ? `${props.address}/tags` : null, fetcher);
+  const { data, error, isValidating } = useSWR(`${props.address}/tags`, fetcher);
 
   if (error) {
     return <ErrorIcon />
@@ -39,8 +43,7 @@ export default function SaveTag(props) {
     return <CircularProgress />
   }
   if (data) {
-    // setDialogProps({open: false, videoId: "", tags: []});
-    setSaveState("complete")
+    setSaveState("complete");
   }
   return <CircularProgress />
 
