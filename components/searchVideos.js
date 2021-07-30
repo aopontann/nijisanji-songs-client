@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRecoilState } from "recoil";
-import { videoListState } from "../src/atoms";
+import { videoListState, searchValueState, searchCheckBoxState } from "../src/atoms";
 import { makeStyles } from "@material-ui/styles";
 import { Paper } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -31,38 +31,37 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchVideos() {
+export default function SearchVideos({ videos }) {
   const [videoList, setVideoList] = useRecoilState(videoListState);
-  const [searchName, setSearchName] = useState("");
-  const [checkState, setCheckState] = useState(true);
+  const [searchCheckBox, setSearchCheckBox] = useRecoilState(searchCheckBoxState);
+  const [searchValue, setSearchValue] = useRecoilState(searchValueState);
   const classes = useStyles();
 
   const searchClick = () => {
     console.log("CLICK!!!!!");
-    const reg = new RegExp(searchName);
-    const result = searchName
-      ? props.videos.filter(
+    const reg = new RegExp(searchValue);
+    const result = searchValue
+      ? videos.filter(
           (video) =>
             video.title.match(reg) ||
-            (checkState ? video.description.match(reg) : false) ||
-            video.tags.map((tagData) => tagData.tag.name).includes(search_tag)
+            (searchCheckBox ? video.description.match(reg) : false) ||
+            video.tags.map((tagData) => tagData.tag.name).includes(searchValue)
         )
       : [];
     setVideoList([...result]);
   };
 
   const searchChange = (event) => {
-    const value = event.target.value || event.target.textContent;
-    setSearchName(value);
+    setSearchValue(event.target.value);
   };
 
   const searchDelete = () => {
-    setSearchName("");
-    videoList([]);
+    setSearchValue("");
+    setVideoList([]);
   };
 
   const checkBoxChange = (event) => {
-    setCheckState(event.target.checked);
+    setSearchCheckBox(event.target.checked);
   };
 
   return (
@@ -75,7 +74,7 @@ export default function SearchVideos() {
           className={classes.input}
           placeholder="曲名,ライバー名,タグ..."
           inputProps={{ "aria-label": "Search Videos" }}
-          value={search_tag}
+          value={searchValue}
           onChange={searchChange}
         />
         <IconButton
@@ -98,7 +97,7 @@ export default function SearchVideos() {
         style={{ marginLeft: "2px" }}
         control={
           <Checkbox
-            checked={checkState}
+            checked={searchCheckBox}
             onChange={checkBoxChange}
             color="primary"
           />
