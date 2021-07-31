@@ -126,10 +126,17 @@ export default function EditTagDialog(props) {
       <DialogTitle>タグ編集</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          動画に出演しているライバー名や、動画やイラスト提供者などの名前を追加できるよ
-          (動画に関係ないタグは追加しないでね)
+          動画に関係するタグを追加してください。詳しくは「このサイトについて」ページで確認してください。
         </DialogContentText>
         <Paper component="form" className={classes.root}>
+          <IconButton
+            className={classes.iconButton}
+            aria-label="tag Type"
+            onClick={tagTypeChange}
+          >
+            <MusicNoteIcon color={addTag.description == "歌唱" ? "primary" : "disabled"}/>
+          </IconButton>
+          <Divider className={classes.divider} orientation="vertical" />
           <InputBase
             className={classes.input}
             placeholder="追加するタグ名..."
@@ -143,14 +150,6 @@ export default function EditTagDialog(props) {
             onClick={handleAdd}
           >
             <AddIcon />
-          </IconButton>
-          <Divider className={classes.divider} orientation="vertical" />
-          <IconButton
-            className={classes.iconButton}
-            aria-label="tag Type"
-            onClick={tagTypeChange}
-          >
-            <MusicNoteIcon color={addTag.description == "歌唱" ? "primary" : "disabled"}/>
           </IconButton>
         </Paper>
         <Card style={{ maxWidth: "700px", marginTop: "1rem" }}>
