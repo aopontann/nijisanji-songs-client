@@ -1,26 +1,25 @@
-import Layout from "../components/Layout";
 import React from "react";
 import { RecoilRoot } from "recoil";
 import VideoList from "../components/videoList";
 import SearchVideos from "../components/searchVideos";
 import TagList from "../components/tagList";
 import EditTagDialog from "../components/editTagDialog";
+import { get_time, toDatetime } from "../lib/get_times";
 
-export default function Home(props) { 
+export default function Home(props) {
   return (
-    <Layout>
-      <RecoilRoot>
-        <SearchVideos videos={props.videos} />
-        <TagList tags={props.tags} />
-        <VideoList />
-        <EditTagDialog address={props.address}/>
-      </RecoilRoot>
-    </Layout>
+    <RecoilRoot>
+      <SearchVideos videos={props.videos} time={props.bTime}/>
+      <TagList tags={props.tags} />
+      <VideoList />
+      <EditTagDialog address={props.address} />
+    </RecoilRoot>
   );
 }
 
 export async function getStaticProps() {
   const Address = process.env.API_ADDRESS;
+  const buildTime = get_time({format: "YYYY-MM-DD"});
   const params = { songConfirm: true };
   const query = new URLSearchParams(params);
   const res = await fetch(`${Address}/videos?${query}`, {
@@ -40,6 +39,7 @@ export async function getStaticProps() {
       videos: data,
       tags: data_tags,
       address: Address,
+      bTime: buildTime,
     },
     revalidate: 60,
   };
