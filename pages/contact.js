@@ -1,14 +1,9 @@
-import Layout from "../components/Layout";
-import useSWR from "swr";
-import { Box } from "@material-ui/core";
 import Link from "next/dist/client/link";
-import { Typography } from "@material-ui/core";
-
-import { Button } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 
 export default function Contact() {
   return (
-    <Layout>
+    <div>
       <Typography variant="h5" paragraph>
         問い合わせ
       </Typography>
@@ -24,20 +19,6 @@ export default function Contact() {
           Googleフォーム
         </Link>
       </Typography>
-    </Layout>
+    </div>
   );
-}
-
-// SWRテスト
-function Videos() {
-  const { data, error, isValidating } = useSWR(
-    "http://localhost:8081/videos?id=oPAcjv__fbc&maxResults=30"
-  );
-  if (isValidating) {
-    return <div>loading</div>;
-  }
-  if (error) {
-    return <div>failed to load</div>;
-  }
-  return <div>hello</div>;
 }

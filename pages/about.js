@@ -1,10 +1,9 @@
-import Layout from "../components/Layout";
-import { Box } from "@material-ui/core";
-import { Typography, Link } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
 
 export default function About() {
   return (
-    <Layout>
+    <div>
       <Typography variant="h5" paragraph>
         このサイトについて
       </Typography>
@@ -14,7 +13,8 @@ export default function About() {
         <br />
         にじさんじ公式チャンネルや外部コラボチャンネルから公開された動画のみ掲載しています。
         <br />
-        歌ってみた動画以外にもオリジナル曲やネタ、shortも掲載していますが、クロスフェード動画は掲載していないです。
+        歌ってみた動画以外にもオリジナル曲やネタ、shortも掲載しています。<br />
+        （限定公開動画、クロスフェード動画は掲載していないです。もし掲載されている動画がありましたら問い合わせから連絡ください）
       </Typography>
       <Typography variant="subtitle1">このサイトの目的</Typography>
       <Typography variant="body" paragraph>
@@ -71,6 +71,6 @@ export default function About() {
           GitHub
         </Link>
       </Typography>
-    </Layout>
+    </div>
   );
 }

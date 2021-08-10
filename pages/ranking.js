@@ -1,9 +1,12 @@
 import React from "react";
 import Layout from "../components/Layout";
 import { useState } from "react";
-import { Box } from "@material-ui/core";
-import { Card, Link, CardMedia, CardContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
+import Card from "@material-ui/core/Card"
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
@@ -26,8 +29,6 @@ const useStyles = makeStyles((theme) => ({
     "-webkit-box-orient": "vertical",
   },
 }));
-
-export const RankingVideos = React.createContext();
 
 export default function Ranking({ data }) {
   const [videos, setVideo] = useState(data.slice(0, 50));
@@ -54,7 +55,7 @@ export default function Ranking({ data }) {
   const classes = useStyles();
 
   return (
-    <Layout>
+    <div>
       <Typography variant="h5">累計視聴回数ランキング</Typography>
       <Typography variant="h6" align="center">{`${(page - 1) * 50 + 1}位 〜 ${
         page * 50
@@ -112,7 +113,7 @@ export default function Ranking({ data }) {
           Next
         </Button>
       </div>
-    </Layout>
+    </div>
   );
 }
 

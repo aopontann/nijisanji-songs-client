@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { RecoilRoot, useRecoilState, atom } from "recoil";
+import React from "react";
+import { useRecoilState } from "recoil";
 import { videoListState, searchValueState } from "../src/atoms";
-import { Box, Card, CardContent } from "@material-ui/core";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
-import { Chip } from "@material-ui/core";
+import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme) => ({
   chips: {

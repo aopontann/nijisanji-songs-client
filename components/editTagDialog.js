@@ -3,16 +3,18 @@ import { useRecoilState } from "recoil";
 import SaveTag from "./saveTag";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import { Paper, Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
-import { Card, CardContent } from "@material-ui/core";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Divider } from "@material-ui/core";
-import { InputBase } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import InputBase from "@material-ui/core/InputBase";
 import ErrorIcon from "@material-ui/icons/Error";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import AddIcon from "@material-ui/icons/Add";
@@ -134,7 +136,9 @@ export default function EditTagDialog(props) {
             aria-label="tag Type"
             onClick={tagTypeChange}
           >
-            <MusicNoteIcon color={addTag.description == "歌唱" ? "primary" : "disabled"}/>
+            <MusicNoteIcon
+              color={addTag.description == "歌唱" ? "primary" : "disabled"}
+            />
           </IconButton>
           <Divider className={classes.divider} orientation="vertical" />
           <InputBase
