@@ -97,7 +97,7 @@ export default function PersistentDrawerLeft({ children }) {
     "公開予定",
     "ランキング",
   ];
-  const tag_path = ["/", "/about", "today_songs", "ranking"];
+  const tag_path = ["/", "/about", "schedule", "ranking"];
   const tag_icons = [
     <Home />,
     <DescriptionIcon />,

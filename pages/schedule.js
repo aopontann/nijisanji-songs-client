@@ -1,12 +1,12 @@
-import Layout from "../components/Layout";
-import useSWR from "swr";
 import { get_time, toDatetime } from "../lib/get_times";
 import { useState } from "react";
-import { Box } from "@material-ui/core";
-import { Card, Link, CardMedia, CardContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import Box from "@material-ui/core/Box";
+import Link from "@material-ui/core/Link";
+import Card from "@material-ui/core/Card"
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,11 +28,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Home({ data }) {
+export default function Home({ data, update_time }) {
   const classes = useStyles();
   return (
-    <Layout>
+    <div>
       <Typography variant="h5">今日公開予定歌動画</Typography>
+      <Typography variant="body2" color="textSecondary" component="p">
+        {`更新時間:${update_time}`}
+      </Typography>
       <Box
         display="flex"
         flexWrap="wrap"
@@ -75,28 +78,25 @@ export default function Home({ data }) {
         })}
       </Box>
       {data.length == 0 ? (
-        <Typography variant="body" align="center">{`現時点(${get_time({
-          format: "HH:mm",
-        })})ではないよ`}</Typography>
+        <Typography variant="body" align="center">{`現時点(${update_time})では、今日公開される動画はないみたいだよ`}</Typography>
       ) : (
         ""
       )}
-    </Layout>
+    </div>
   );
 }
 
 export async function getStaticProps() {
-  // <p>{`現在時点(${get_time({format: "HH時mm分"})})では今日公開される歌ってみた動画はないみたいだよ`}</p>
-  /* const startTime = toDatetime({
-    time: dt.startTime,
-    format: "公開時間: HH時mm分"
-  })*/
   const Address = process.env.API_ADDRESS;
   const today_first = get_time({
     format: "YYYY-MM-DDT00:00:00",
   });
   const today_last = get_time({
     format: "YYYY-MM-DDT23:59:59",
+  });
+
+  const update_time = get_time({
+    format: "MM/DD HH:mm",
   });
 
   const params = {
@@ -114,7 +114,8 @@ export async function getStaticProps() {
   return {
     props: {
       data,
+      update_time,
     },
-    revalidate: 60 * 10,
+    revalidate: 60,
   };
 }
