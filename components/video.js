@@ -1,14 +1,29 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { dialogOpenState, dialogVideoIdState, dialogTagsState } from "../src/atoms";
+import {
+  dialogOpenState,
+  dialogVideoIdState,
+  dialogTagsState,
+} from "../src/atoms";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import { Box } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
+import clsx from "clsx";
 import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Collapse from "@material-ui/core/Collapse";
+import Avatar from "@material-ui/core/Avatar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
+import { red } from "@material-ui/core/colors";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import ShareIcon from "@material-ui/icons/Share";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import EditIcon from "@material-ui/icons/Edit";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import { get_time, toDatetime } from "../lib/get_times";
@@ -18,6 +33,20 @@ const useStyles = makeStyles((theme) => ({
     width: 345 * 0.8,
     margin: theme.spacing(0.5),
   },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: "rotate(180deg)",
+  },
   title: {
     display: "-webkit-box",
     overflow: "hidden",
@@ -26,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tags: {
     display: "flex",
-    justifyContent: "center",
     flexWrap: "wrap",
     "& > *": {
       margin: theme.spacing(0.3),
@@ -37,13 +65,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function VideoCard({ video, type }){
+export function VideoCard({ video, type }) {
   const setDialogOpen = useSetRecoilState(dialogOpenState);
   const setDialogVideoId = useSetRecoilState(dialogVideoIdState);
   const setDialogTags = useSetRecoilState(dialogTagsState);
+  const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
 
-  const handleClickOpen = (video) => () => {
+  const handleClickOpen = () => {
     console.log("open", video);
     //setDialogProps({ open: true, videoId: video.id, tags: video.tags });
     setDialogOpen(true);
@@ -51,8 +80,8 @@ export function VideoCard({ video, type }){
     setDialogTags([...video.tags]);
   };
 
-  const handleClose = () => {
-    setOpen({ open: false, videoId: "", tags: [] });
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
   };
 
   const startTime = toDatetime({
@@ -69,38 +98,58 @@ export function VideoCard({ video, type }){
         underline="none"
       >
         <CardMedia
-          component="img"
+          className={classes.media}
           alt={video.title}
           image={video.thumbnail.medium || ""}
           title={video.title}
         />
       </Link>
 
-      <CardContent>
+      <CardContent style={{ backgroundColor: "", height: "5rem" }}>
         <Typography className={classes.title}>
           <Box lineHeight={1.1}>{video.title}</Box>
         </Typography>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography variant="body2" color="textSecondary" component="body2">
           {type == "statistics"
             ? `視聴回数: ${video.statistic.viewCount.toLocaleString()}`
             : `${startTime}`}
         </Typography>
-        <div className={classes.tags}>
-          {video.tags.map((tagData) => (
-            <Chip
-              icon={tagData.description == "歌唱" ? <MusicNoteIcon /> : ""}
-              label={tagData.tag.name}
-              size="small"
-            />
-          ))}
-          <Chip
-            size="small"
-            label="編集"
-            icon={<EditIcon />}
-            onClick={handleClickOpen(video)}
-          />
-        </div>
       </CardContent>
+      <CardActions
+        disableSpacing
+        style={{ height: "2rem", marginBottom: "1rem", backgroundColor: "" }}
+      >
+        <IconButton aria-label="add to favorites" onClick={() => window.alert("準備中です！")}>
+          <FavoriteIcon fontSize="small" />
+        </IconButton>
+        <IconButton aria-label="tagEdit" onClick={handleClickOpen}>
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expanded,
+          })}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          <ExpandMoreIcon />
+        </IconButton>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent style={{ backgroundColor: "", paddingTop: "0rem" }}>
+          <Typography>タグ:</Typography>
+          <div className={classes.tags}>
+            {video.tags.map((tagData) => (
+              <Chip
+                icon={tagData.description == "歌唱" ? <MusicNoteIcon /> : ""}
+                label={tagData.tag.name}
+                size="small"
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Collapse>
     </Card>
   );
 }
