@@ -119,7 +119,7 @@ export function VideoCard({ video, type }) {
         disableSpacing
         style={{ height: "2rem", marginBottom: "1rem", backgroundColor: "" }}
       >
-        <IconButton aria-label="add to favorites" onClick={() => window.alert("準備中です！")}>
+        <IconButton aria-label="add to favorites" onClick={() => window.alert("お気に入り機能は準備中です！")}>
           <FavoriteIcon fontSize="small" />
         </IconButton>
         <IconButton aria-label="tagEdit" onClick={handleClickOpen}>
