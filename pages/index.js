@@ -4,13 +4,15 @@ import VideoList from "../components/videoList";
 import SearchVideos from "../components/searchVideos";
 import TagList from "../components/tagList";
 import EditTagDialog from "../components/editTagDialog";
+import VtuberList from "../components/vtuberList";
 import { get_time, toDatetime } from "../lib/get_times";
+import TagVtuberAccordion from "../components/accordion";
 
 export default function Home(props) {
   return (
     <RecoilRoot>
       <SearchVideos videos={props.videos} time={props.bTime}/>
-      <TagList tags={props.tags} />
+      <TagVtuberAccordion videos={props.videos} tags={props.tags} vtuberList={props.vtuber}/>
       <VideoList />
       <EditTagDialog address={props.address} />
     </RecoilRoot>
@@ -34,10 +36,17 @@ export async function getStaticProps() {
   const data_tags = res_tags.status === 200 ? await res_tags.json() : [];
   res_tags ? "" : console.error("search fetch error");
 
+  const res_vtuber = await fetch(`${Address}/vtuber`, {
+    method: "GET",
+  });
+  const data_vtuber = res_vtuber.status === 200 ? await res_vtuber.json() : [];
+  res_vtuber ? "" : console.error("search fetch error");
+
   return {
     props: {
       videos: data,
       tags: data_tags,
+      vtuber: data_vtuber,
       address: Address,
       bTime: buildTime,
     },
