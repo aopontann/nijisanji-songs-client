@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Search from "@material-ui/icons/Search";
 import Divider from "@material-ui/core/Divider";
 import InputBase from "@material-ui/core/InputBase";
+import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { get_time, toDatetime } from "../lib/get_times";
@@ -47,7 +48,7 @@ export default function SearchVideos({ videos, time }) {
           (video) =>
             video.title.match(reg) ||
             (searchCheckBox ? video.description.match(reg) : false) ||
-            video.tags.map((tagData) => tagData.tag.name).includes(searchValue)
+            video.tags.map((tagData) => tagData.name).includes(searchValue)
         )
       : [];
     setVideoList([...result]);
@@ -95,6 +96,9 @@ export default function SearchVideos({ videos, time }) {
           <DeleteIcon />
         </IconButton>
       </Paper>
+      <Typography variant="body2" component="body2" style={{marginLeft: "1rem"}}>
+          {"検索範囲："}
+      </Typography>
       <FormControlLabel
         style={{ marginLeft: "2px" }}
         control={

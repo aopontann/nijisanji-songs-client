@@ -35,7 +35,7 @@ export default function TagList({ videos, tags }) {
       (video) =>
         video.title.match(reg) ||
         (searchCheckBox ? video.description.match(reg) : false) ||
-        video.tags.map((tagData) => tagData.tag.name).includes(searchValue)
+        video.tags.map((tagData) => tagData.name).includes(searchValue)
     );
     setVideoList([...result]);
   };

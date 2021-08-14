@@ -67,20 +67,13 @@ export default function EditTagDialog(props) {
   const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState);
   const [dialogTags, setDialogTags] = useRecoilState(dialogTagsState);
   const [saveState, setSaveState] = useRecoilState(saveTagsState);
-  const [addTag, setAddTag] = useState({ name: "", description: "その他" });
+  const [addTag, setAddTag] = useState({ name: "", type: null });
 
   const classes = useStyles();
 
   const handleChange = (target) => (event) => {
-    target == "name"
-      ? setAddTag({ name: event.target.value, description: addTag.description })
-      : "";
-    target == "description"
-      ? setAddTag({
-          name: addTag.name,
-          description: event.target.value || addTag.description,
-        })
-      : "";
+    console.log({ ...addTag, [target]: event.target.value });
+    setAddTag({ ...addTag, [target]: event.target.value });
   };
 
   const handleClose = () => {
@@ -94,29 +87,22 @@ export default function EditTagDialog(props) {
     setDialogOpen(false);
     setDialogVideoId("");
     setDialogTags([]);
-    setAddTag({ name: "", description: "その他" });
+    setAddTag({ name: "", type: null });
     setSaveState("ready");
   };
 
   const handleAdd = () => {
-    setDialogTags([
-      ...dialogTags,
-      { description: addTag.description, tag: { name: addTag.name } },
-    ]);
-    setAddTag({ name: "", description: "その他" });
+    const names = dialogTags.map((tag) => tag.name);
+    // 重複するタグは追加しない
+    names.includes(addTag.name) ? "" : setDialogTags([...dialogTags, addTag]);
+    setAddTag({ name: "", type: null });
   };
 
   const handleDelete = (chipToDelete) => () => {
     console.log(chipToDelete);
     setDialogTags(
-      dialogTags.filter((tagData) => tagData.tag.name !== chipToDelete.tag.name)
+      dialogTags.filter((tagData) => tagData.name !== chipToDelete.name)
     );
-  };
-
-  const tagTypeChange = () => {
-    addTag.description == "歌唱"
-      ? setAddTag({ ...addTag, description: "その他" })
-      : setAddTag({ ...addTag, description: "歌唱" });
   };
 
   return (
@@ -131,16 +117,6 @@ export default function EditTagDialog(props) {
           動画に関係するタグを追加してください。詳しくは「このサイトについて」ページで確認してください。
         </DialogContentText>
         <Paper component="form" className={classes.root}>
-          <IconButton
-            className={classes.iconButton}
-            aria-label="tag Type"
-            onClick={tagTypeChange}
-          >
-            <MusicNoteIcon
-              color={addTag.description == "歌唱" ? "primary" : "disabled"}
-            />
-          </IconButton>
-          <Divider className={classes.divider} orientation="vertical" />
           <InputBase
             className={classes.input}
             placeholder="追加するタグ名..."
@@ -166,9 +142,8 @@ export default function EditTagDialog(props) {
                 return (
                   <li>
                     <Chip
-                      label={data.tag.name}
+                      label={data.name}
                       size="small"
-                      icon={data.description == "歌唱" ? <MusicNoteIcon /> : ""}
                       className={classes.chip}
                       onDelete={handleDelete(data)}
                     />
