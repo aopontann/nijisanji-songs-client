@@ -32,7 +32,7 @@ export default function Home({ data, update_time, address }) {
         justifyContent="center"
       >
         {data.map((video) => (
-        <VideoCard video={video} type="statistics" />
+        <VideoCard video={video} type="startTime" />
       ))}
       </Box>
       {data.length == 0 ? (
