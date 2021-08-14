@@ -105,27 +105,20 @@ export function VideoCard({ video, type }) {
         />
       </Link>
 
-      <CardContent style={{ backgroundColor: "", height: "5rem" }}>
+      <CardContent style={{ backgroundColor: "", height: "" }}>
         <Typography className={classes.title}>
           <Box lineHeight={1.1}>{video.title}</Box>
         </Typography>
-        <Typography variant="body2" color="textSecondary" component="body2">
+        <Typography variant="body" color="textSecondary" component="body">
           {type == "statistics"
             ? `視聴回数: ${video.statistic.viewCount.toLocaleString()}`
             : `${startTime}`}
         </Typography>
-      </CardContent>
-      <CardActions
-        disableSpacing
-        style={{ height: "2rem", marginBottom: "1rem", backgroundColor: "" }}
-      >
-        <IconButton aria-label="add to favorites" onClick={() => window.alert("お気に入り機能は準備中です！")}>
-          <FavoriteIcon fontSize="small" />
-        </IconButton>
-        <IconButton aria-label="tagEdit" onClick={handleClickOpen}>
-          <EditIcon fontSize="small" />
-        </IconButton>
+        <Typography variant="body2" component="body2">
+          タグ
+        </Typography>
         <IconButton
+          size="small"
           className={clsx(classes.expand, {
             [classes.expandOpen]: expanded,
           })}
@@ -135,21 +128,23 @@ export function VideoCard({ video, type }) {
         >
           <ExpandMoreIcon />
         </IconButton>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent style={{ backgroundColor: "", paddingTop: "0rem" }}>
-          <Typography>タグ:</Typography>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
           <div className={classes.tags}>
+            <Chip
+              size="small"
+              variant="outlined"
+              label="タグ編集"
+              onClick={handleClickOpen}
+            />
             {video.tags.map((tagData) => (
               <Chip
-                icon={tagData.description == "歌唱" ? <MusicNoteIcon /> : ""}
-                label={tagData.tag.name}
+                label={tagData.name}
                 size="small"
               />
             ))}
           </div>
-        </CardContent>
-      </Collapse>
+        </Collapse>
+      </CardContent>
     </Card>
   );
 }
