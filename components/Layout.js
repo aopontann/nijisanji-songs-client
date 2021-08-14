@@ -19,7 +19,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { Home, People, Schedule, Star, Help } from "@material-ui/icons";
 import Link from "next/link";
 
-const drawerWidth = 240;
+const drawerWidth = 205;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,11 +93,11 @@ export default function PersistentDrawerLeft({ children }) {
 
   const tag_name = [
     "ホーム",
-    "このサイトについて",
+    "サイトについて",
     "公開予定",
     "ランキング",
   ];
-  const tag_path = ["/", "/about", "today_songs", "ranking"];
+  const tag_path = ["/", "/about", "schedule", "ranking"];
   const tag_icons = [
     <Home />,
     <DescriptionIcon />,

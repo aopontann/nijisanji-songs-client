@@ -2,7 +2,7 @@ import React from "react";
 import { VideoCard } from "./video";
 import { useRecoilValue } from "recoil";
 import { videoListState } from "../src/atoms";
-import { Box } from "@material-ui/core";
+import Box from "@material-ui/core/Box";
 
 export default function VideoList() {
   const videoList = useRecoilValue(videoListState);
@@ -14,6 +14,7 @@ export default function VideoList() {
       m={0.2}
       bgcolor="background.paper"
       justifyContent="center"
+      alignItems="flex-start"
     >
       {videoList.map((video) => (
         <VideoCard video={video} type="statistics" />

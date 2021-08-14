@@ -2,14 +2,16 @@ import React from "react";
 import { useRecoilState } from "recoil";
 import { videoListState, searchValueState, searchCheckBoxState } from "../src/atoms";
 import { makeStyles } from "@material-ui/styles";
-import { Paper } from "@material-ui/core";
+import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import Search from "@material-ui/icons/Search";
-import { Divider } from "@material-ui/core";
-import { InputBase } from "@material-ui/core";
-import { FormControlLabel } from "@material-ui/core";
-import { Checkbox } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
+import InputBase from "@material-ui/core/InputBase";
+import Typography from "@material-ui/core/Typography";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import { get_time, toDatetime } from "../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,21 +33,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchVideos({ videos }) {
+export default function SearchVideos({ videos, time }) {
   const [videoList, setVideoList] = useRecoilState(videoListState);
   const [searchCheckBox, setSearchCheckBox] = useRecoilState(searchCheckBoxState);
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
   const classes = useStyles();
 
   const searchClick = () => {
-    console.log("CLICK!!!!!");
+    const clickTime = get_time({format: "YYYY-MM-DD"});
+    clickTime > time ? window.alert("ページを更新してください") : ""
     const reg = new RegExp(searchValue);
     const result = searchValue
       ? videos.filter(
           (video) =>
             video.title.match(reg) ||
             (searchCheckBox ? video.description.match(reg) : false) ||
-            video.tags.map((tagData) => tagData.tag.name).includes(searchValue)
+            video.tags.map((tagData) => tagData.name).includes(searchValue)
         )
       : [];
     setVideoList([...result]);
@@ -93,6 +96,9 @@ export default function SearchVideos({ videos }) {
           <DeleteIcon />
         </IconButton>
       </Paper>
+      <Typography variant="body2" component="body2" style={{marginLeft: "1rem"}}>
+          {"検索範囲："}
+      </Typography>
       <FormControlLabel
         style={{ marginLeft: "2px" }}
         control={

@@ -1,13 +1,6 @@
 import React from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  dialogOpenState,
-  dialogVideoIdState,
-  dialogTagsState,
-} from "../src/atoms";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
-import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -30,8 +23,7 @@ import { get_time, toDatetime } from "../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 345 * 0.8,
-    margin: theme.spacing(0.5),
+    maxWidth: 345 * 0.8,
   },
   media: {
     height: 0,
@@ -60,25 +52,11 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(0.3),
     },
   },
-  addTag: {
-    margin: theme.spacing(0.3),
-  },
 }));
 
-export function VideoCard({ video, type }) {
-  const setDialogOpen = useSetRecoilState(dialogOpenState);
-  const setDialogVideoId = useSetRecoilState(dialogVideoIdState);
-  const setDialogTags = useSetRecoilState(dialogTagsState);
-  const [expanded, setExpanded] = React.useState(false);
+export default function TestVideo() {
   const classes = useStyles();
-
-  const handleClickOpen = () => {
-    console.log("open", video);
-    //setDialogProps({ open: true, videoId: video.id, tags: video.tags });
-    setDialogOpen(true);
-    setDialogVideoId(video.id);
-    setDialogTags([...video.tags]);
-  };
+  const [expanded, setExpanded] = React.useState(true);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -91,19 +69,12 @@ export function VideoCard({ video, type }) {
 
   return (
     <Card className={classes.root}>
-      <Link
-        href={`https://www.youtube.com/watch?v=${video.id}`}
-        target="_blank"
-        rel="noopener"
-        underline="none"
-      >
-        <CardMedia
-          className={classes.media}
-          alt={video.title}
-          image={video.thumbnail.medium || ""}
-          title={video.title}
-        />
-      </Link>
+      <CardMedia
+        className={classes.media}
+        alt={video.title}
+        image={video.thumbnail.medium || ""}
+        title={video.title}
+      />
 
       <CardContent style={{ backgroundColor: "", height: "" }}>
         <Typography className={classes.title}>
@@ -134,7 +105,7 @@ export function VideoCard({ video, type }) {
               size="small"
               variant="outlined"
               label="タグ編集"
-              onClick={handleClickOpen}
+              onClick={() => window.alert("このページでは編集できないよ")}
             />
             {video.tags.map((tagData) => (
               <Chip
@@ -149,38 +120,44 @@ export function VideoCard({ video, type }) {
   );
 }
 
-/*
-{
-        "id": "oPAcjv__fbc",
-        "title": "【】歌ってみた KING 葛葉 【】",
-        "description": "▼ 原曲 / Kanaria様\n　https://twitter.com/kanaria390\n　https://www.youtube.com/watch?v=cm-l2h6GB8Q\n▼ MIX / そらる様\n　https://twitter.com/soraruru\n　https://www.youtube.com/channel/UCrALFGPubY9rNwVOOJUYu4g\n▼ Illust / AKKE様\n　https://twitter.com/akke299\n▼ Movie / CNR+様\n　https://twitter.com/CNR_Plus\n\n▼俺/葛葉様\n　https://twitter.com/Vamp_Kuzu",
-        "startTime": "2020-11-10T20:00:00.000Z",
-        "createdAt": "2021-06-23T13:56:38.000Z",
-        "songConfirm": true,
-        "thumbnail": {
-            "id": "oPAcjv__fbc",
-            "defaultUrl": "https://i.ytimg.com/vi/oPAcjv__fbc/default.jpg",
-            "medium": "https://i.ytimg.com/vi/oPAcjv__fbc/mqdefault.jpg",
-            "high": "https://i.ytimg.com/vi/oPAcjv__fbc/hqdefault.jpg",
-            "standard": "https://i.ytimg.com/vi/oPAcjv__fbc/sddefault.jpg",
-            "maxres": "https://i.ytimg.com/vi/oPAcjv__fbc/maxresdefault.jpg"
-        },
-        "statistic": {
-            "id": "oPAcjv__fbc",
-            "createdAt": "2021-06-23T13:56:38.000Z",
-            "updatedAt": "2021-06-23T13:58:09.000Z",
-            "viewCount": 20888555,
-            "likeCount": 336413,
-            "dislikeCount": 2790,
-            "commentCount": 22412
-        },
-        "tags": [
-            {
-                "description": "歌",
-                "tag": {
-                    "name": "葛葉"
-                }
-            }
-        ]
-    }
-*/
+const type = "statistics";
+const video = {
+  id: "oPAcjv__fbc",
+  title: "【】歌ってみた KING 葛葉 【】",
+  description:
+    "▼ 原曲 / Kanaria様\n　https://twitter.com/kanaria390\n　https://www.youtube.com/watch?v=cm-l2h6GB8Q\n▼ MIX / そらる様\n　https://twitter.com/soraruru\n　https://www.youtube.com/channel/UCrALFGPubY9rNwVOOJUYu4g\n▼ Illust / AKKE様\n　https://twitter.com/akke299\n▼ Movie / CNR+様\n　https://twitter.com/CNR_Plus\n\n▼俺/葛葉様\n　https://twitter.com/Vamp_Kuzu",
+  startTime: "2020-11-10T20:00:00.000Z",
+  createdAt: "2021-06-23T13:56:38.000Z",
+  songConfirm: true,
+  thumbnail: {
+    id: "oPAcjv__fbc",
+    defaultUrl: "https://i.ytimg.com/vi/oPAcjv__fbc/default.jpg",
+    medium: "https://i.ytimg.com/vi/oPAcjv__fbc/mqdefault.jpg",
+    high: "https://i.ytimg.com/vi/oPAcjv__fbc/hqdefault.jpg",
+    standard: "https://i.ytimg.com/vi/oPAcjv__fbc/sddefault.jpg",
+    maxres: "https://i.ytimg.com/vi/oPAcjv__fbc/maxresdefault.jpg",
+  },
+  statistic: {
+    id: "oPAcjv__fbc",
+    createdAt: "2021-06-23T13:56:38.000Z",
+    updatedAt: "2021-06-23T13:58:09.000Z",
+    viewCount: 20888555,
+    likeCount: 336413,
+    dislikeCount: 2790,
+    commentCount: 22412,
+  },
+  tags: [
+    {
+      name: "葛葉",
+      type: null,
+    },
+    {
+      name: "kuzuha",
+      type: null,
+    },
+    {
+      name: "KING",
+      type: null,
+    },
+  ],
+};

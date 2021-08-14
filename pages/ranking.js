@@ -1,9 +1,11 @@
 import React from "react";
-import Layout from "../components/Layout";
+import { RecoilRoot } from "recoil";
+import { VideoCard } from "../components/video";
+import EditTagDialog from "../components/editTagDialog";
+import { get_time, toDatetime } from "../lib/get_times";
 import { useState } from "react";
-import { Box } from "@material-ui/core";
-import { Card, Link, CardMedia, CardContent } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 
@@ -14,28 +16,15 @@ const useStyles = makeStyles((theme) => ({
     },
     textAlign: "center",
   },
-  videos: {
-    width: 345 * 0.8,
-    height: 310 * 0.75,
-    margin: theme.spacing(0.5),
-  },
-  title: {
-    display: "-webkit-box",
-    overflow: "hidden",
-    "-webkit-line-clamp": 2,
-    "-webkit-box-orient": "vertical",
-  },
 }));
 
-export const RankingVideos = React.createContext();
-
-export default function Ranking({ data }) {
+export default function Ranking({ data, update_time, address }) {
   const [videos, setVideo] = useState(data.slice(0, 50));
   const [page, setPage] = useState(1);
 
   const pageUp = () => {
     console.log("up", page);
-    if(page*50 < data.length) {
+    if (page * 50 < data.length) {
       setVideo(data.slice(page * 50, (page + 1) * 50));
       setPage(page + 1);
     }
@@ -54,8 +43,11 @@ export default function Ranking({ data }) {
   const classes = useStyles();
 
   return (
-    <Layout>
+    <RecoilRoot>
       <Typography variant="h5">累計視聴回数ランキング</Typography>
+      <Typography variant="body2" color="textSecondary" component="p">
+        {`更新時間:${update_time}`}
+      </Typography>
       <Typography variant="h6" align="center">{`${(page - 1) * 50 + 1}位 〜 ${
         page * 50
       }位`}</Typography>
@@ -75,34 +67,9 @@ export default function Ranking({ data }) {
         bgcolor="background.paper"
         justifyContent="center"
       >
-        {videos.map((video) => {
-          return (
-            <Card className={classes.videos}>
-              <Link
-                href={`https://www.youtube.com/watch?v=${video.id}`}
-                target="_blank"
-                rel="noopener"
-                underline="none"
-              >
-                <CardMedia
-                  component="img"
-                  alt={video.title}
-                  image={video.thumbnail.medium || ""}
-                  title={video.title}
-                />
-              </Link>
-
-              <CardContent>
-                <Typography className={classes.title}>
-                  <Box lineHeight={1.1}>{video.title}</Box>
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {`視聴回数: ${video.statistic.viewCount.toLocaleString()}`}
-                </Typography>
-              </CardContent>
-            </Card>
-          );
-        })}
+        {videos.map((video) => (
+          <VideoCard video={video} type="statistics" />
+        ))}
       </Box>
       <div className={classes.root}>
         <Button variant="outlined" color="primary" onClick={pageDown}>
@@ -112,15 +79,19 @@ export default function Ranking({ data }) {
           Next
         </Button>
       </div>
-    </Layout>
+      <EditTagDialog address={address} />
+    </RecoilRoot>
   );
 }
 
 export async function getStaticProps() {
-  const Address = process.env.API_ADDRESS;
+  const address = process.env.API_ADDRESS;
+  const update_time = get_time({
+    format: "MM/DD HH:mm",
+  });
   const params = { songConfirm: true, page: 1 };
   const query = new URLSearchParams(params);
-  const res = await fetch(`${Address}/videos?${query}`, {
+  const res = await fetch(`${address}/videos?${query}`, {
     method: "GET",
   });
   const data = res.status === 200 ? await res.json() : [];
@@ -129,6 +100,8 @@ export async function getStaticProps() {
   return {
     props: {
       data,
+      update_time,
+      address,
     },
     revalidate: 60,
   };
