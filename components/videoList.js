@@ -14,6 +14,7 @@ export default function VideoList() {
       m={0.2}
       bgcolor="background.paper"
       justifyContent="center"
+      alignItems="flex-start"
     >
       {videoList.map((video) => (
         <VideoCard video={video} type="statistics" />
