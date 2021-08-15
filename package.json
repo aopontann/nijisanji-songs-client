@@ -16,5 +16,8 @@
     "react-dom": "17.0.2",
     "recoil": "^0.3.1",
     "swr": "^0.5.6"
+  },
+  "devDependencies": {
+    "gtag": "^1.0.1"
   }
 }
