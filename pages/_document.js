@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
           <script
             defer
             src="https://static.cloudflareinsights.com/beacon.min.js"
-            data-cf-beacon='{"token": ${NEXT_PUBLIC_ANALYTICS_ID}}'
+            data-cf-beacon='{"token": "7d802913bf1c480fba5856338445959d"}'
           ></script>
         </Head>
         <body>
