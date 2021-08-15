@@ -29,11 +29,6 @@ export default function MyApp(props) {
           name="description"
           content="にじさんじの歌動画をまとめたサイトです"
         />
-        <script
-          defer
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon='{"token": ${NEXT_PUBLIC_ANALYTICS_ID}}'
-        ></script>
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
