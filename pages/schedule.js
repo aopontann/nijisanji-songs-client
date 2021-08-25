@@ -72,7 +72,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      data,
+      data : data.result,
       update_time,
       address: Address,
     },
