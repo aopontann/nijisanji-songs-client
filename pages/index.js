@@ -47,7 +47,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      videos: data,
+      videos: data.result,
       tags: data_tags,
       vtuber: data_vtuber,
       address,
