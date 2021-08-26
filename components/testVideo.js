@@ -109,6 +109,7 @@ export default function TestVideo() {
             />
             {video.tags.map((tagData) => (
               <Chip
+                key={tagData.name}
                 label={tagData.name}
                 size="small"
               />
