@@ -21,8 +21,7 @@ import { get_time, toDatetime } from "../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345 * 0.8,
-    minWidth: 345 * 0.5,
+    width: 345 * 0.8,
     margin: theme.spacing(0.5),
   },
   media: {
@@ -40,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     transform: "rotate(180deg)",
   },
   title: {
+    height: "2rem",
     display: "-webkit-box",
     overflow: "hidden",
     "-webkit-line-clamp": 2,
