@@ -63,45 +63,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditTagDialog(props) {
   const [videoList, setVideoList] = useRecoilState(videoListState);
-  const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState);
-  const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState);
-  const [dialogTags, setDialogTags] = useRecoilState(dialogTagsState);
+  const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState); //boolean
+  const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState); //string
+  const [dialogTags, setDialogTags] = useRecoilState(dialogTagsState); //string[]
   const [saveState, setSaveState] = useRecoilState(saveTagsState);
-  const [addTag, setAddTag] = useState({ name: "", type: null });
+
+  const [inputTagName, setInputTagName] = useState("");
 
   const classes = useStyles();
 
-  const handleChange = (target) => (event) => {
-    console.log({ ...addTag, [target]: event.target.value });
-    setAddTag({ ...addTag, [target]: event.target.value });
-  };
-
   const handleClose = () => {
+    const saveTags = dialogTags.map(tagName => { 
+      return {name: tagName}
+    })
     saveState === "complete"
       ? setVideoList(
           videoList.map((video) =>
-            video.id == dialogVideoId ? { ...video, tags: dialogTags } : video
+            video.id == dialogVideoId ? { ...video, tags: saveTags } : video
           )
         )
       : "";
     setDialogOpen(false);
     setDialogVideoId("");
     setDialogTags([]);
-    setAddTag({ name: "", type: null });
+    setInputTagName("");
     setSaveState("ready");
   };
 
   const handleAdd = () => {
-    const names = dialogTags.map((tag) => tag.name);
     // 重複するタグは追加しない
-    names.includes(addTag.name) ? "" : setDialogTags([...dialogTags, addTag]);
-    setAddTag({ name: "", type: null });
+    dialogTags.includes(inputTagName) ? "" : setDialogTags([...dialogTags, inputTagName]);
+    setInputTagName("");
   };
 
   const handleDelete = (chipToDelete) => () => {
     console.log(chipToDelete);
     setDialogTags(
-      dialogTags.filter((tagData) => tagData.name !== chipToDelete.name)
+      dialogTags.filter((tagName) => tagName !== chipToDelete)
     );
   };
 
@@ -121,12 +119,12 @@ export default function EditTagDialog(props) {
             className={classes.input}
             placeholder="追加するタグ名..."
             inputProps={{ "aria-label": "Add Tag" }}
-            value={addTag.name}
-            onChange={handleChange("name")}
+            value={inputTagName}
+            onChange={(e) => setInputTagName(e.target.value)}
           />
           <IconButton
             className={classes.iconButton}
-            aria-label="search"
+            aria-label="add-tag"
             onClick={handleAdd}
           >
             <AddIcon />
@@ -138,14 +136,15 @@ export default function EditTagDialog(props) {
               タグ
             </Typography>
             <Typography component="ui" className={classes.chips}>
-              {dialogTags.map((data) => {
+              {dialogTags.map((tagName) => {
                 return (
-                  <li>
+                  <li key={tagName}>
                     <Chip
-                      label={data.name}
+                      key={tagName}
+                      label={tagName}
                       size="small"
                       className={classes.chip}
-                      onDelete={handleDelete(data)}
+                      onDelete={handleDelete(tagName)}
                     />
                   </li>
                 );
