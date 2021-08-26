@@ -43,7 +43,7 @@ export default function TagList({ videos, tags }) {
     <Typography component="ui" className={classes.chips}>
       {tags.map((tag) => {
         return (
-          <li>
+          <li key={tag.name}>
             <Chip
               size="small"
               className={classes.chip}

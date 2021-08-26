@@ -45,19 +45,19 @@ export default function VtuberList({ videos, vtuberList }) {
   return (
     <div>
       {["にじさんじ", "NIJISANJI KR", "NIJISANJI ID", "NIJISANJI EN"].map(
-          (affi) => {
+          (affi, index) => {
             const filtered_vtuberList = vtuberList.filter(
               (vtuber) => vtuber.affiliation === affi && vtuber.type === null
             );
             return (
-              <div>
+              <div key={index}>
                 <Typography variant="body2" component="p" gutterBottom>
                   {affi}
                 </Typography>
                 <Typography component="ui" className={classes.chips}>
                   {filtered_vtuberList.map((vtuber) => {
                     return (
-                      <li>
+                      <li key={vtuber.name}>
                         <Chip
                           size="small"
                           className={classes.chip}
@@ -80,7 +80,7 @@ export default function VtuberList({ videos, vtuberList }) {
             .filter((vtuber) => vtuber.type == "卒業")
             .map((vtuber) => {
               return (
-                <li>
+                <li key={vtuber.name}>
                   <Chip
                     size="small"
                     className={classes.chip}

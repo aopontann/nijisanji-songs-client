@@ -67,8 +67,8 @@ export default function Ranking({ data, update_time, address }) {
         bgcolor="background.paper"
         justifyContent="center"
       >
-        {videos.map((video) => (
-          <VideoCard video={video} type="statistics" />
+        {videos.map((video,index) => (
+          <VideoCard key={index} video={video} type="statistics" />
         ))}
       </Box>
       <div className={classes.root}>

@@ -20,7 +20,7 @@ export default function SaveTag(props) {
 
   const send_body = {
     videoId: dialogVideoId,
-    tags: dialogTags
+    tagNames: dialogTags
   };
 
   const fetcher = (url) =>
