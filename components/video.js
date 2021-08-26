@@ -10,27 +10,19 @@ import clsx from "clsx";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import EditIcon from "@material-ui/icons/Edit";
-import MusicNoteIcon from "@material-ui/icons/MusicNote";
 import { get_time, toDatetime } from "../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 345 * 0.8,
+    maxWidth: 345 * 0.8,
+    minWidth: 345 * 0.5,
     margin: theme.spacing(0.5),
   },
   media: {
@@ -67,17 +59,15 @@ const useStyles = makeStyles((theme) => ({
 
 export function VideoCard({ video, type }) {
   const setDialogOpen = useSetRecoilState(dialogOpenState);
-  const setDialogVideoId = useSetRecoilState(dialogVideoIdState);
-  const setDialogTags = useSetRecoilState(dialogTagsState);
+  const setDialogVideoId = useSetRecoilState(dialogVideoIdState); //string
+  const setDialogTags = useSetRecoilState(dialogTagsState); //string[]
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
 
   const handleClickOpen = () => {
-    console.log("open", video);
-    //setDialogProps({ open: true, videoId: video.id, tags: video.tags });
     setDialogOpen(true);
     setDialogVideoId(video.id);
-    setDialogTags([...video.tags]);
+    setDialogTags(video.tags.map(tag => tag.name));
   };
 
   const handleExpandClick = () => {
@@ -136,8 +126,9 @@ export function VideoCard({ video, type }) {
               label="タグ編集"
               onClick={handleClickOpen}
             />
-            {video.tags.map((tagData) => (
+            {video.tags.map((tagData,index) => (
               <Chip
+                key={index}
                 label={tagData.name}
                 size="small"
               />
