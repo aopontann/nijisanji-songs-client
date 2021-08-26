@@ -16,8 +16,8 @@ export default function VideoList() {
       justifyContent="center"
       alignItems="flex-start"
     >
-      {videoList.map((video) => (
-        <VideoCard video={video} type="statistics" />
+      {videoList.map((video, index) => (
+        <VideoCard key={index} video={video} type="statistics" />
       ))}
     </Box>
   );
