@@ -166,7 +166,7 @@ export default function EditTagDialog(props) {
             保存
           </Button>
         ) : saveState === "sending" ? (
-          <SaveTag address={props.address} />
+          <SaveTag />
         ) : saveState === "complete" ? (
           <Button onClick={handleClose} color="primary">
             {`保存完了(閉じる)`}
@@ -183,10 +183,7 @@ export default function EditTagDialog(props) {
 {
         "tags": [
             {
-                "description": "歌",
-                "tag": {
-                    "name": "葛葉"
-                }
+                  "name": "葛葉"
             }
         ]
     }

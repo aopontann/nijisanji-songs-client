@@ -1,10 +1,8 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import {
-  videoListState,
-  searchValueState,
-  searchCheckBoxState,
-} from "../src/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { searchCheckBoxState, searchValueState } from "./searchVideos";
+import { all_videoListState, filtered_videoListState } from "./videoList";
+import { tagsListExpandedState } from "./accordion";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
@@ -21,24 +19,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TagList({ videos, tags }) {
-  const [videoList, setVideoList] = useRecoilState(videoListState);
+export default function TagList({ tags }) {
+  const all_videoList = useRecoilValue(all_videoListState);
+  const searchCheckBox = useRecoilValue(searchCheckBoxState);
+  const set_filtered_videoListState = useSetRecoilState(filtered_videoListState);
+  const set_tagsListExpandedState = useSetRecoilState(tagsListExpandedState);
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
-  const [searchCheckBox, setSearchCheckBox] =
-    useRecoilState(searchCheckBoxState);
   const classes = useStyles();
 
   const tagClick = (event) => {
     setSearchValue(event.target.textContent);
     const reg = new RegExp(event.target.textContent);
-    const result = videos.filter(
+    const result = all_videoList.filter(
       (video) =>
         video.title.match(reg) ||
         (searchCheckBox ? video.description.match(reg) : false) ||
         video.tags.map((tagData) => tagData.name).includes(searchValue)
     );
-    setVideoList([...result]);
+    set_filtered_videoListState([...result]);
+    set_tagsListExpandedState(false);
   };
+
   return (
     <Typography component="ui" className={classes.chips}>
       {tags.map((tag) => {

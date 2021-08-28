@@ -85,7 +85,7 @@ export default function Ranking({ data, update_time, address }) {
 }
 
 export async function getStaticProps() {
-  const address = process.env.API_ADDRESS;
+  const address = process.env.NEXT_PUBLIC_API_ADDRESS;
   const update_time = get_time({
     format: "MM/DD HH:mm",
   });

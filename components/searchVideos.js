@@ -1,6 +1,6 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { videoListState, searchValueState, searchCheckBoxState } from "../src/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState, atom } from "recoil";
+import { all_videoListState, filtered_videoListState } from "./videoList";
 import { makeStyles } from "@material-ui/styles";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -33,10 +33,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchVideos({ videos, time }) {
-  const [videoList, setVideoList] = useRecoilState(videoListState);
-  const [searchCheckBox, setSearchCheckBox] = useRecoilState(searchCheckBoxState);
+export const searchValueState = atom({
+  key: "searchValueState",
+  default: ""
+});
+
+export const searchCheckBoxState = atom({
+  key: "searchCheckBoxState",
+  default: true
+});
+
+export default function SearchVideos({ time }) {
+  // APIから取得した全ての動画データ
+  const all_videoList = useRecoilValue(all_videoListState);
+  // 条件にあった動画を保存 videoListで表示される
+  const set_filtered_videoList = useSetRecoilState(filtered_videoListState);
+
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
+  const [searchCheckBox, setSearchCheckBox] = useRecoilState(searchCheckBoxState);
   const classes = useStyles();
 
   const searchClick = () => {
@@ -44,14 +58,14 @@ export default function SearchVideos({ videos, time }) {
     clickTime > time ? window.alert("ページを更新してください") : ""
     const reg = new RegExp(searchValue);
     const result = searchValue
-      ? videos.filter(
+      ? all_videoList.filter(
           (video) =>
             video.title.match(reg) ||
             (searchCheckBox ? video.description.match(reg) : false) ||
             video.tags.map((tagData) => tagData.name).includes(searchValue)
         )
       : [];
-    setVideoList([...result]);
+      set_filtered_videoList([...result]);
   };
 
   const searchChange = (event) => {
@@ -60,7 +74,7 @@ export default function SearchVideos({ videos, time }) {
 
   const searchDelete = () => {
     setSearchValue("");
-    setVideoList([]);
+    set_filtered_videoList([...all_videoList]);
   };
 
   const checkBoxChange = (event) => {

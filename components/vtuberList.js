@@ -1,12 +1,10 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import {
-  videoListState,
-  searchValueState,
-  searchCheckBoxState,
-} from "../src/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import { all_videoListState, filtered_videoListState } from "./videoList";
+import { searchCheckBoxState, searchValueState } from "./searchVideos";
+import { vtuberListExpandedState } from "./accordion";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
@@ -24,22 +22,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VtuberList({ videos, vtuberList }) {
-  const [videoList, setVideoList] = useRecoilState(videoListState);
+  const all_videoList = useRecoilValue(all_videoListState);
+  const searchCheckBox = useRecoilValue(searchCheckBoxState);
+  const set_filtered_videoListState = useSetRecoilState(filtered_videoListState);
+  const set_vtuberListExpandedState = useSetRecoilState(vtuberListExpandedState);
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
-  const [searchCheckBox, setSearchCheckBox] =
-    useRecoilState(searchCheckBoxState);
   const classes = useStyles();
 
   const tagClick = (event) => {
     setSearchValue(event.target.textContent);
     const reg = new RegExp(event.target.textContent);
-    const result = videos.filter(
+    const result = all_videoList.filter(
       (video) =>
         video.title.match(reg) ||
         (searchCheckBox ? video.description.match(reg) : false) ||
         video.tags.map((tagData) => tagData.name).includes(searchValue)
     );
-    setVideoList([...result]);
+    set_filtered_videoListState([...result]);
+    set_vtuberListExpandedState(false);
   };
 
   return (
@@ -93,64 +93,4 @@ export default function VtuberList({ videos, vtuberList }) {
         </Typography>
     </div>
   )
-  /*
-  return videoList.length == 0 ? (
-    <Card style={{ maxWidth: "700px", marginTop: "1rem" }}>
-      <CardContent>
-        <Typography variant="body" component="p" gutterBottom>
-          ライバー一覧
-        </Typography>
-        {["にじさんじ", "NIJISANJI KR", "NIJISANJI ID", "NIJISANJI EN"].map(
-          (affi) => {
-            const filtered_vtuberList = vtuberList.filter(
-              (vtuber) => vtuber.affiliation === affi && vtuber.type === null
-            );
-            return (
-              <div>
-                <Typography variant="body2" component="p" gutterBottom>
-                  {affi}
-                </Typography>
-                <Typography component="ui" className={classes.chips}>
-                  {filtered_vtuberList.map((vtuber) => {
-                    return (
-                      <li>
-                        <Chip
-                          size="small"
-                          className={classes.chip}
-                          label={vtuber.name}
-                          onClick={tagClick}
-                        />
-                      </li>
-                    );
-                  })}
-                </Typography>
-              </div>
-            );
-          }
-        )}
-        <Typography variant="body2" component="p" gutterBottom>
-          {"卒業したライバー"}
-        </Typography>
-        <Typography component="ui" className={classes.chips}>
-          {vtuberList
-            .filter((vtuber) => vtuber.type == "卒業")
-            .map((vtuber) => {
-              return (
-                <li>
-                  <Chip
-                    size="small"
-                    className={classes.chip}
-                    label={vtuber.name}
-                    onClick={tagClick}
-                  />
-                </li>
-              );
-            })}
-        </Typography>
-      </CardContent>
-    </Card>
-  ) : (
-    <div></div>
-  );
-  */
 }

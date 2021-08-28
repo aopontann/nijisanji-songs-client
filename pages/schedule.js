@@ -46,7 +46,7 @@ export default function Home({ data, update_time, address }) {
 }
 
 export async function getStaticProps() {
-  const Address = process.env.API_ADDRESS;
+  const address = process.env.NEXT_PUBLIC_API_ADDRESS;
   const today_first = get_time({
     format: "YYYY-MM-DDT00:00:00",
   });
@@ -65,7 +65,7 @@ export async function getStaticProps() {
   };
 
   const query = new URLSearchParams(params);
-  const res = await fetch(`${Address}/videos?${query}`, {
+  const res = await fetch(`${address}/videos?${query}`, {
     method: "GET",
   });
   const data = res.status === 200 ? await res.json() : [];
@@ -74,7 +74,7 @@ export async function getStaticProps() {
     props: {
       data : data.result,
       update_time,
-      address: Address,
+      address,
     },
     revalidate: 60,
   };
