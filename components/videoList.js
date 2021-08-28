@@ -9,6 +9,8 @@ import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 export const all_videoListState = atom({
   key: "all_videoListState",
@@ -37,8 +39,10 @@ export default function VideoList({ type }) {
   );
   const setSearchValue = useSetRecoilState(searchValueState);
   const [updateVideo, setUpdateVideo] = useState(false);
+  const [thisPage, setThisPage] = useState(1);
   const classes = useStyles();
 
+  const maxResult = 50;
   const params = {
     songConfirm: true,
     maxResults: 9999,
@@ -69,17 +73,45 @@ export default function VideoList({ type }) {
   const matches600 = useMediaQuery("(min-width:600px)");
   const grid = matches1000 ? 3 : matches600 ? 4 : 6;
 
+  const sliceStart = (thisPage - 1) * maxResult;
+  const sliceEnd =
+    thisPage * maxResult < filtered_videoList.length
+      ? thisPage * maxResult
+      : filtered_videoList.length;
+
   return (
     <div>
       <Typography variant="subtitle1" component="subtitle1" paragraph>
-        {`${filtered_videoList.length} 件`}
+        {`${sliceStart+1}-${sliceEnd} / ${
+          filtered_videoList.length
+        } 件`}
       </Typography>
+      <ButtonGroup color="primary" aria-label="outlined primary button group">
+        <Button
+          onClick={() => {
+            thisPage > 1 ? setThisPage(thisPage - 1) : "";
+          }}
+        >
+          前
+        </Button>
+        <Button
+          onClick={() => {
+            filtered_videoList.length / maxResult >= thisPage
+              ? setThisPage(thisPage + 1)
+              : "";
+          }}
+        >
+          次
+        </Button>
+      </ButtonGroup>
       <Grid container spacing={2}>
-        {filtered_videoList.map((video, index) => (
-          <Grid item xs={grid} key={index}>
-            <VideoCard video={video} type={type} />
-          </Grid>
-        ))}
+        {filtered_videoList
+          .slice(sliceStart, sliceEnd)
+          .map((video, index) => (
+            <Grid item xs={grid} key={index}>
+              <VideoCard video={video} type={type} />
+            </Grid>
+          ))}
         <Backdrop
           className={classes.backdrop}
           open={isValidating ? true : false}
