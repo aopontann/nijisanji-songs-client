@@ -41,7 +41,7 @@ export default function VideoList({ type }) {
 
   const params = {
     songConfirm: true,
-    maxResults: 200,
+    maxResults: 9999,
     page: 1,
     order: "startTime",
   };
@@ -72,7 +72,7 @@ export default function VideoList({ type }) {
   return (
     <div>
       <Typography variant="subtitle1" component="subtitle1" paragraph>
-        {`${filtered_videoList.length} 件ヒット`}
+        {`${filtered_videoList.length} 件`}
       </Typography>
       <Grid container spacing={2}>
         {filtered_videoList.map((video, index) => (
