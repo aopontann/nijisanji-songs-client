@@ -57,7 +57,7 @@ export default function VideoList({ type }) {
   const query = new URLSearchParams(params);
   const { data, error, isValidating } = useSWR(
     `${process.env.NEXT_PUBLIC_API_ADDRESS}/videos?${query}`,
-    { revalidateOnFocus: true, focusThrottleInterval: 1000 * 60 }
+    { focusThrottleInterval: 1000 * 60 * 5 }
   );
 
   if (isValidating && !updateVideo) {

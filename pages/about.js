@@ -44,10 +44,7 @@ export default function About() {
       </Typography>
       <Typography variant="subtitle1">タグ機能について</Typography>
       <Typography variant="body" paragraph>
-        このサイトで紹介している動画にはタグがついており、タグは誰でも編集できるようになっています。動画の「タグ編集」をクリックすることでタグ編集できます。(このページでは編集できません)<br />サンプル↓
-      </Typography>
-      <Typography variant="body" paragraph>
-        <br />
+        このサイトで紹介している動画にはタグがついており、タグは誰でも編集できるようになっています。動画のタグをクリックすると、その動画に登録されているタグが表示され、その中にある「タグ編集」をクリックすることでタグを編集することができます<br />
         タグをつけることで動画を探しやすくなるため、動画の出演ライバー名やユニット名、動画の特徴(オリジナル曲,クリスマスとか...)などのタグを追加してくれるとありがたいです。追加するタグは何でもいいですが、動画に関係ないタグを追加するのはだめです！
       </Typography>
       <Typography variant="subtitle1">検索機能について</Typography>
