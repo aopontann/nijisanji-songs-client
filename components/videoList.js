@@ -22,6 +22,11 @@ export const filtered_videoListState = atom({
   default: [],
 });
 
+export const thisPageState = atom({
+  key: "thisPageState",
+  default: 1
+});
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -37,9 +42,9 @@ export default function VideoList({ type }) {
   const [filtered_videoList, set_filtered_videoList] = useRecoilState(
     filtered_videoListState
   );
+  const [thisPage, setThisPage] = useRecoilState(thisPageState);
   const setSearchValue = useSetRecoilState(searchValueState);
   const [updateVideo, setUpdateVideo] = useState(false);
-  const [thisPage, setThisPage] = useState(1);
   const classes = useStyles();
 
   const maxResult = 50;
@@ -66,6 +71,7 @@ export default function VideoList({ type }) {
     set_filtered_videoList([...data.result]); //初期データ
     setUpdateVideo(false);
     setSearchValue("");
+    setThisPage(1);
   }
 
   // 1000pxより大きいと true
