@@ -1,6 +1,6 @@
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState, atom } from "recoil";
-import { all_videoListState, filtered_videoListState } from "./videoList";
+import { all_videoListState, filtered_videoListState,thisPageState } from "./videoList";
 import { makeStyles } from "@material-ui/styles";
 import Paper from "@material-ui/core/Paper";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -48,6 +48,7 @@ export default function SearchVideos({ time }) {
   const all_videoList = useRecoilValue(all_videoListState);
   // 条件にあった動画を保存 videoListで表示される
   const set_filtered_videoList = useSetRecoilState(filtered_videoListState);
+  const setThisPage = useSetRecoilState(thisPageState);
 
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
   const [searchCheckBox, setSearchCheckBox] = useRecoilState(searchCheckBoxState);
@@ -66,6 +67,7 @@ export default function SearchVideos({ time }) {
         )
       : [];
       set_filtered_videoList([...result]);
+      setThisPage(1);
   };
 
   const searchChange = (event) => {
@@ -74,6 +76,7 @@ export default function SearchVideos({ time }) {
 
   const searchDelete = () => {
     setSearchValue("");
+    setThisPage(1);
     set_filtered_videoList([...all_videoList]);
   };
 
