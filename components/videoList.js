@@ -47,7 +47,7 @@ export default function VideoList({ type }) {
   const [updateVideo, setUpdateVideo] = useState(false);
   const classes = useStyles();
 
-  const maxResult = 10;
+  const maxResult = 50;
   const params = {
     songConfirm: true,
     maxResults: 9999,
