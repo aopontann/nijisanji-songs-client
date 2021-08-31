@@ -53,6 +53,7 @@ export default function SearchFilter() {
   };
 
   const handleChange2 = (event) => {
+    const reg = new RegExp(searchValue);
     const result =
       searchValue != ""
         ? all_videoList.filter(
