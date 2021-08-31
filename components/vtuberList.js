@@ -7,6 +7,7 @@ import {
 } from "./videoList";
 import { searchCheckBoxState, searchValueState } from "./searchVideos";
 import { vtuberListExpandedState } from "./accordion";
+import { searchScopeState } from "./searchfilter";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function VtuberList({ vtuberList }) {
   const all_videoList = useRecoilValue(all_videoListState);
-  const searchCheckBox = useRecoilValue(searchCheckBoxState);
+  const searchScope = useRecoilValue(searchScopeState);
   const set_filtered_videoListState = useSetRecoilState(filtered_videoListState);
   const setThisPage = useSetRecoilState(thisPageState);
   const set_vtuberListExpandedState = useSetRecoilState(vtuberListExpandedState);
@@ -36,11 +37,9 @@ export default function VtuberList({ vtuberList }) {
     const reg = new RegExp(event.target.textContent);
     const result = all_videoList.filter(
       (video) =>
-        video.title.match(reg) ||
-        (searchCheckBox ? video.description.match(reg) : false) ||
-        video.tags
-          .map((tagData) => tagData.name)
-          .includes(event.target.textContent)
+        (searchScope.title ? video.title.match(reg) : false) ||
+        (searchScope.description ? video.description.match(reg) : false) ||
+        (searchScope.tag ? video.tags.map((tagData) => tagData.name).includes(event.target.textContent) : false)
     );
     set_filtered_videoListState([...result]);
     setSearchValue(event.target.textContent);

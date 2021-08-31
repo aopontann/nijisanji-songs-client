@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EditTagDialog(props) {
+export default function EditTagDialog() {
   const [videoList, setVideoList] = useRecoilState(videoListState);
   const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState); //boolean
   const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState); //string

@@ -1,9 +1,19 @@
 import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState, atom } from "recoil";
-import { all_videoListState, filtered_videoListState,thisPageState } from "./videoList";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+  atom,
+} from "recoil";
+import {
+  all_videoListState,
+  filtered_videoListState,
+  thisPageState,
+} from "./videoList";
 import { makeStyles } from "@material-ui/styles";
 import Paper from "@material-ui/core/Paper";
-import DeleteIcon from "@material-ui/icons/Delete";
+import ClearIcon from "@material-ui/icons/Clear";
+import FilterListIcon from "@material-ui/icons/FilterList";
 import IconButton from "@material-ui/core/IconButton";
 import Search from "@material-ui/icons/Search";
 import Divider from "@material-ui/core/Divider";
@@ -12,6 +22,9 @@ import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import { get_time, toDatetime } from "../lib/get_times";
+
+import SearchList from "../components/searchList";
+import SearchFilter, { searchScopeState, orderState } from "./searchfilter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,68 +48,81 @@ const useStyles = makeStyles((theme) => ({
 
 export const searchValueState = atom({
   key: "searchValueState",
-  default: ""
+  default: "",
 });
 
 export const searchCheckBoxState = atom({
   key: "searchCheckBoxState",
-  default: true
+  default: true,
 });
 
-export default function SearchVideos({ time }) {
+export default function SearchVideos({ time, vtuberList }) {
   // APIから取得した全ての動画データ
   const all_videoList = useRecoilValue(all_videoListState);
   // 条件にあった動画を保存 videoListで表示される
   const set_filtered_videoList = useSetRecoilState(filtered_videoListState);
   const setThisPage = useSetRecoilState(thisPageState);
-
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
-  const [searchCheckBox, setSearchCheckBox] = useRecoilState(searchCheckBoxState);
+  const searchScope = useRecoilValue(searchScopeState);
+  const order = useRecoilValue(orderState);
+  const [searchFilterOpen, setSearchFilterOpen] = React.useState(false);
   const classes = useStyles();
 
   const searchClick = () => {
-    const clickTime = get_time({format: "YYYY-MM-DD"});
-    clickTime > time ? window.alert("ページを更新してください") : ""
+    const clickTime = get_time({ format: "YYYY-MM-DD" });
+    clickTime > time ? window.alert("ページを更新してください") : "";
     const reg = new RegExp(searchValue);
     const result = searchValue
       ? all_videoList.filter(
           (video) =>
-            video.title.match(reg) ||
-            (searchCheckBox ? video.description.match(reg) : false) ||
-            video.tags.map((tagData) => tagData.name).includes(searchValue)
+            (searchScope.title ? video.title.match(reg) : false) ||
+            (searchScope.description ? video.description.match(reg) : false) ||
+            (searchScope.tag ? video.tags.map((tag) => tag.name).includes(searchValue) : false)
         )
-      : [];
-      set_filtered_videoList([...result]);
-      setThisPage(1);
+      : [...all_videoList];
+      if (order == "start-asc") {
+        result.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
+      }
+      if (order == "start") {
+        result.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
+      }
+      if (order == "viewCount-asc") {
+        result.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
+      }
+      if (order == "viewCount") {
+        result.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
+      }
+    set_filtered_videoList([...result]);
+    setThisPage(1);
   };
 
   const searchChange = (event) => {
     setSearchValue(event.target.value);
+    searchFilterOpen ? setSearchFilterOpen(false) : ""
   };
 
   const searchDelete = () => {
     setSearchValue("");
     setThisPage(1);
-    set_filtered_videoList([...all_videoList]);
-  };
-
-  const checkBoxChange = (event) => {
-    setSearchCheckBox(event.target.checked);
+    const result = [...all_videoList];
+    if (order == "start-asc") {
+      result.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
+    }
+    if (order == "start") {
+      result.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
+    }
+    if (order == "viewCount-asc") {
+      result.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
+    }
+    if (order == "viewCount") {
+      result.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
+    }
+    set_filtered_videoList([...result]);
   };
 
   return (
-    <Paper
-      component="div"
-      style={{ height: "5.2rem", maxWidth: "700px", marginBottom: "2rem" }}
-    >
+    <Paper component="div" style={{ maxWidth: "700px", marginBottom: "2rem" }}>
       <Paper component="form" className={classes.root}>
-        <InputBase
-          className={classes.input}
-          placeholder="曲名,ライバー名,タグ..."
-          inputProps={{ "aria-label": "Search Videos" }}
-          value={searchValue}
-          onChange={searchChange}
-        />
         <IconButton
           className={classes.iconButton}
           aria-label="search"
@@ -104,29 +130,35 @@ export default function SearchVideos({ time }) {
         >
           <Search />
         </IconButton>
+        <InputBase
+          className={classes.input}
+          placeholder="曲名,ライバー名,タグ..."
+          inputProps={{ "aria-label": "Search Videos" }}
+          value={searchValue}
+          onChange={searchChange}
+        />
+        {searchValue ? (
+          <IconButton
+            className={classes.iconButton}
+            aria-label="delete"
+            onClick={searchDelete}
+          >
+            <ClearIcon />
+          </IconButton>
+        ) : (
+          ""
+        )}
         <Divider className={classes.divider} orientation="vertical" />
         <IconButton
           className={classes.iconButton}
-          aria-label="delete"
-          onClick={searchDelete}
+          aria-label="filter"
+          onClick={() => {setSearchFilterOpen(!searchFilterOpen)}}
         >
-          <DeleteIcon />
+          <FilterListIcon color={searchFilterOpen ? "primary" : "default"}/>
         </IconButton>
       </Paper>
-      <Typography variant="body2" component="body2" style={{marginLeft: "1rem"}}>
-          {"検索範囲："}
-      </Typography>
-      <FormControlLabel
-        style={{ marginLeft: "2px" }}
-        control={
-          <Checkbox
-            checked={searchCheckBox}
-            onChange={checkBoxChange}
-            color="primary"
-          />
-        }
-        label="概要欄も含める"
-      />
+      { searchFilterOpen ? <SearchFilter /> : null }
+      <SearchList vtuberList={vtuberList}/>
     </Paper>
   );
 }

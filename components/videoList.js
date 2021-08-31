@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
-  },
+  }
 }));
 
 export default function VideoList({ type }) {
@@ -47,7 +47,7 @@ export default function VideoList({ type }) {
   const [updateVideo, setUpdateVideo] = useState(false);
   const classes = useStyles();
 
-  const maxResult = 50;
+  const maxResult = 10;
   const params = {
     songConfirm: true,
     maxResults: 9999,
@@ -87,29 +87,31 @@ export default function VideoList({ type }) {
 
   return (
     <div>
-      <Typography variant="subtitle1" component="subtitle1" paragraph>
-        {`${sliceStart+1}-${sliceEnd} / ${
-          filtered_videoList.length
-        } 件`}
-      </Typography>
-      <ButtonGroup color="primary" aria-label="outlined primary button group">
-        <Button
-          onClick={() => {
-            thisPage > 1 ? setThisPage(thisPage - 1) : "";
-          }}
-        >
-          前
-        </Button>
-        <Button
-          onClick={() => {
-            filtered_videoList.length / maxResult >= thisPage
-              ? setThisPage(thisPage + 1)
-              : "";
-          }}
-        >
-          次
-        </Button>
-      </ButtonGroup>
+      <div style={{marginBottom: "1rem"}}>
+        <Typography variant="subtitle1" component="subtitle1" paragraph>
+          {`${sliceStart+1}-${sliceEnd} / ${
+            filtered_videoList.length
+          } 件`}
+        </Typography>
+        <ButtonGroup color="primary" aria-label="outlined primary button group">
+          <Button
+            onClick={() => {
+              thisPage > 1 ? setThisPage(thisPage - 1) : "";
+            }}
+          >
+            前
+          </Button>
+          <Button
+            onClick={() => {
+              filtered_videoList.length / maxResult >= thisPage
+                ? setThisPage(thisPage + 1)
+                : "";
+            }}
+          >
+            次
+          </Button>
+        </ButtonGroup>
+      </div>
       <Grid container spacing={2}>
         {filtered_videoList
           .slice(sliceStart, sliceEnd)

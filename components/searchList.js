@@ -1,23 +1,28 @@
-import React, {useState} from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import InboxIcon from '@material-ui/icons/Inbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import { all_videoListState, filtered_videoListState, thisPageState } from "./videoList";
-import { searchCheckBoxState, searchValueState } from "./searchVideos";
-import { searchScopeState } from './searchfilter';
+import React, { useState } from "react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { makeStyles } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import InboxIcon from "@material-ui/icons/Inbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import {
+  all_videoListState,
+  filtered_videoListState,
+  thisPageState,
+} from "./videoList";
+import { searchValueState } from "./searchVideos";
+import { searchScopeState, orderState } from "./searchfilter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%",
     maxWidth: 360,
     marginLeft: "1rem",
     paddingTop: "0rem",
+    marginTop: "0.1rem",
     backgroundColor: theme.palette.background.paper, // theme.palette.background.paper "lightPink"
   },
 }));
@@ -25,15 +30,20 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchList({ vtuberList }) {
   const all_videoList = useRecoilValue(all_videoListState);
   const searchScope = useRecoilValue(searchScopeState);
-  const set_filtered_videoListState = useSetRecoilState(filtered_videoListState);
+  const order = useRecoilValue(orderState);
+  const set_filtered_videoListState = useSetRecoilState(
+    filtered_videoListState
+  );
   const setThisPage = useSetRecoilState(thisPageState);
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
   const [resultList, setResultList] = useState([]);
   const classes = useStyles();
 
   const reg = new RegExp(searchValue);
-  const filtered_list = searchValue != "" ? vtuberList.filter(vtuber => vtuber.readname.match(reg)) : [];
-  console.log("searchList value=", searchValue);
+  const filtered_list =
+    searchValue != ""
+      ? vtuberList.filter((vtuber) => vtuber.readname.match(reg))
+      : [];
 
   if (filtered_list.length > 0 && resultList.length == 0) {
     setResultList([...filtered_list]);
@@ -48,18 +58,32 @@ export default function SearchList({ vtuberList }) {
       (video) =>
         (searchScope.title ? video.title.match(reg) : false) ||
         (searchScope.description ? video.description.match(reg) : false) ||
-        (searchScope.tag ? video.tags.map((tagData) => tagData.name).includes(name) : false)
+        (searchScope.tag
+          ? video.tags.map((tagData) => tagData.name).includes(name)
+          : false)
     );
+    if (order == "start-asc") {
+      result.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
+    }
+    if (order == "start") {
+      result.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
+    }
+    if (order == "viewCount-asc") {
+      result.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
+    }
+    if (order == "viewCount") {
+      result.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
+    }
     set_filtered_videoListState([...result]);
     setThisPage(1);
     console.log("name", name);
     setSearchValue(name);
-  }
+  };
 
-  return (
+  return resultList.length == 0 ? null : (
     <div className={classes.root}>
       <List component="nav" aria-label="secondary mailbox folders">
-        {resultList.slice(0, 5).map(vtuber => (
+        {resultList.slice(0, 5).map((vtuber) => (
           <React.Fragment key={vtuber.name}>
             <ListItem button onClick={listClick(vtuber.name)}>
               <ListItemText primary={vtuber.name} />

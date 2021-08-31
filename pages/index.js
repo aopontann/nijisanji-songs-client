@@ -3,7 +3,7 @@ import { RecoilRoot } from "recoil";
 import VideoList from "../components/videoList";
 import SearchVideos from "../components/searchVideos";
 import EditTagDialog from "../components/editTagDialog";
-import Typography from "@material-ui/core/Typography";
+import SearchList from "../components/searchList";
 import { get_time, toDatetime } from "../lib/get_times";
 import TagVtuberAccordion from "../components/accordion";
 
@@ -11,10 +11,9 @@ export default function Home(props) {
   console.log(`更新時間:${props.update_time}`);
   return (
     <RecoilRoot>
-      <SearchVideos time={props.bTime}/>
-      <TagVtuberAccordion videos={props.videos} tags={props.tags} vtuberList={props.vtuber}/>
+      <SearchVideos time={props.bTime} vtuberList={props.vtuber}/>
       <VideoList type="statistics"/>
-      <EditTagDialog address={props.address} />
+      <EditTagDialog />
     </RecoilRoot>
   );
 }
