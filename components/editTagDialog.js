@@ -26,7 +26,7 @@ import {
   videoListState,
   saveTagsState,
 } from "../src/atoms";
-
+import { all_videoListState, filtered_videoListState } from "./videoList";
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "2px 4px",
@@ -62,7 +62,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function EditTagDialog() {
-  const [videoList, setVideoList] = useRecoilState(videoListState);
+  const [all_videoList, set_all_videoList] = useRecoilState(all_videoListState);
+  const [filtered_videoList, set_filtered_videoList] = useRecoilState(filtered_videoListState);
   const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState); //boolean
   const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState); //string
   const [dialogTags, setDialogTags] = useRecoilState(dialogTagsState); //string[]
@@ -75,14 +76,21 @@ export default function EditTagDialog() {
   const handleClose = () => {
     const saveTags = dialogTags.map(tagName => { 
       return {name: tagName}
-    })
-    saveState === "complete"
-      ? setVideoList(
-          videoList.map((video) =>
-            video.id == dialogVideoId ? { ...video, tags: saveTags } : video
-          )
+    });
+    console.log(saveState);
+    console.log(saveTags);
+    if(saveState === "complete") {
+      set_all_videoList(
+        all_videoList.map((video) =>
+          video.id == dialogVideoId ? { ...video, tags: saveTags } : video
         )
-      : "";
+      );
+      set_filtered_videoList(
+        filtered_videoList.map((video) =>
+          video.id == dialogVideoId ? { ...video, tags: saveTags } : video
+        )
+      )
+    }
     setDialogOpen(false);
     setDialogVideoId("");
     setDialogTags([]);
