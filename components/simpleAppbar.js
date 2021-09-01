@@ -56,13 +56,12 @@ export default function ButtonAppBar({ children }) {
     setOpen(false);
   };
 
-  const tag_name = ["ホーム", "サイトについて", "公開予定", "ランキング"];
-  const tag_path = ["/", "/about", "/schedule", "/ranking"];
+  const tag_name = ["ホーム", "サイトについて", "公開予定"];
+  const tag_path = ["/", "/about", "/schedule"];
   const tag_icons = [
     <HomeIcon key={"Home"}/>,
     <DescriptionIcon key={"Description"}/>,
-    <ScheduleIcon key={"Schedule"}/>,
-    <StarIcon key={"Star"}/>,
+    <ScheduleIcon key={"Schedule"}/>
   ];
 
   return (
@@ -98,7 +97,7 @@ export default function ButtonAppBar({ children }) {
           onKeyDown={handleDrawerClose}
         >
           <List>
-            {["ホーム", "サイトについて", "公開予定", "ランキング"].map(
+            {["ホーム", "サイトについて", "公開予定"].map(
               (text, index) => (
                 <Link key={text} href={tag_path[index]} passHref>
                   <ListItem button key={text}>
