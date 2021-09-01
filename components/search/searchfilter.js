@@ -40,7 +40,7 @@ export default function SearchFilter() {
   const classes = useStyles();
   const [value, setValue] = useRecoilState(orderState);
   const all_videoList = useRecoilValue(all_videoListState);
-  const searchScope = useRecoilValue(searchScopeState);
+  const [searchScope, setSearchScope] = useRecoilState(searchScopeState);
   const searchValue = useRecoilValue(searchValueState);
   const set_filtered_videoList = useSetRecoilState(filtered_videoListState);
 
