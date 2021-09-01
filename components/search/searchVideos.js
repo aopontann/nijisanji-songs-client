@@ -18,10 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Search from "@material-ui/icons/Search";
 import Divider from "@material-ui/core/Divider";
 import InputBase from "@material-ui/core/InputBase";
-import Typography from "@material-ui/core/Typography";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import { get_time, toDatetime } from "../../lib/get_times";
+import { get_time } from "../../lib/get_times";
 
 import CondidateList, { condidateListState } from "./condidateList";
 import SearchFilter, { searchScopeState, orderState, sortVideos } from "./searchfilter";
@@ -49,11 +46,6 @@ const useStyles = makeStyles((theme) => ({
 export const searchValueState = atom({
   key: "searchValueState",
   default: "",
-});
-
-export const searchCheckBoxState = atom({
-  key: "searchCheckBoxState",
-  default: true,
 });
 
 export default function SearchVideos({ time, vtuberList }) {

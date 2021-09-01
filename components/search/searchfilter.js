@@ -1,5 +1,6 @@
 import React from "react";
-import { useRecoilState, atom, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { atom } from "recoil";
 import { makeStyles } from "@material-ui/core/styles";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
@@ -38,12 +39,10 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchFilter() {
   const classes = useStyles();
   const [value, setValue] = useRecoilState(orderState);
-  const [searchScope, setSearchScope] = useRecoilState(searchScopeState);
-  const [all_videoList, set_all_videoList] = useRecoilState(all_videoListState);
-  const [filtered_videoList, set_filtered_videoList] = useRecoilState(
-    filtered_videoListState
-  );
+  const all_videoList = useRecoilValue(all_videoListState);
+  const searchScope = useRecoilValue(searchScopeState);
   const searchValue = useRecoilValue(searchValueState);
+  const set_filtered_videoList = useSetRecoilState(filtered_videoListState);
 
   const handleChange = (event) => {
     setSearchScope({
@@ -67,8 +66,11 @@ export default function SearchFilter() {
                 : false)
           )
         : [...all_videoList];
-    
-    const sortedVideos = sortVideos({order: event.target.value, videos: result})
+
+    const sortedVideos = sortVideos({
+      order: event.target.value,
+      videos: result,
+    });
     set_filtered_videoList([...sortedVideos]);
     setValue(event.target.value);
   };
@@ -138,7 +140,7 @@ export default function SearchFilter() {
   );
 }
 
-export function sortVideos({ order , videos }){
+export function sortVideos({ order, videos }) {
   if (order == "start-asc") {
     videos.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
   }
@@ -146,10 +148,14 @@ export function sortVideos({ order , videos }){
     videos.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
   }
   if (order == "viewCount-asc") {
-    videos.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
+    videos.sort((a, b) =>
+      a.statistic.viewCount > b.statistic.viewCount ? 1 : -1
+    );
   }
   if (order == "viewCount") {
-    videos.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
+    videos.sort((a, b) =>
+      a.statistic.viewCount < b.statistic.viewCount ? 1 : -1
+    );
   }
   return videos;
 }

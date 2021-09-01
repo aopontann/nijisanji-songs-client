@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import useSWR from "swr";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { VideoCard } from "./video";
-import { useRecoilState, useSetRecoilState, atom } from "recoil";
-import { searchValueState } from "./search/searchVideos";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { atom } from "recoil";
 import Typography from "@material-ui/core/Typography";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -11,6 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import { searchValueState } from "./search/searchVideos";
+import { orderState, sortVideos } from "./search/searchfilter";
 
 export const all_videoListState = atom({
   key: "all_videoListState",
@@ -44,6 +46,7 @@ export default function VideoList({ type }) {
   );
   const [thisPage, setThisPage] = useRecoilState(thisPageState);
   const setSearchValue = useSetRecoilState(searchValueState);
+  const order = useRecoilValue(orderState);
   const [updateVideo, setUpdateVideo] = useState(false);
   const classes = useStyles();
 
@@ -68,6 +71,7 @@ export default function VideoList({ type }) {
   if (!isValidating && data && updateVideo) {
     console.log("データ初期化");
     set_all_videoList([...data.result]);
+    const sortedVideos = sortVideos({order, videos: data.result});
     set_filtered_videoList([...data.result]); //初期データ
     setUpdateVideo(false);
     setSearchValue("");
