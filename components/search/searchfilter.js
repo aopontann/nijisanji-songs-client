@@ -9,7 +9,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 
-import { all_videoListState, filtered_videoListState } from "./videoList";
+import { all_videoListState, filtered_videoListState } from "../videoList";
 import { searchValueState } from "./searchVideos";
 
 export const searchScopeState = atom({
@@ -67,20 +67,9 @@ export default function SearchFilter() {
                 : false)
           )
         : [...all_videoList];
-
-    if (event.target.value == "start-asc") {
-      result.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
-    }
-    if (event.target.value == "start") {
-      result.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
-    }
-    if (event.target.value == "viewCount-asc") {
-      result.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
-    }
-    if (event.target.value == "viewCount") {
-      result.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
-    }
-    set_filtered_videoList([...result]);
+    
+    const sortedVideos = sortVideos({order: event.target.value, videos: result})
+    set_filtered_videoList([...sortedVideos]);
     setValue(event.target.value);
   };
 
@@ -147,4 +136,20 @@ export default function SearchFilter() {
       </FormControl>
     </div>
   );
+}
+
+export function sortVideos({ order , videos }){
+  if (order == "start-asc") {
+    videos.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
+  }
+  if (order == "start") {
+    videos.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
+  }
+  if (order == "viewCount-asc") {
+    videos.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
+  }
+  if (order == "viewCount") {
+    videos.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
+  }
+  return videos;
 }

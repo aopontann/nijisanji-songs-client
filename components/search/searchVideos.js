@@ -9,7 +9,7 @@ import {
   all_videoListState,
   filtered_videoListState,
   thisPageState,
-} from "./videoList";
+} from "../videoList";
 import { makeStyles } from "@material-ui/styles";
 import Paper from "@material-ui/core/Paper";
 import ClearIcon from "@material-ui/icons/Clear";
@@ -21,10 +21,10 @@ import InputBase from "@material-ui/core/InputBase";
 import Typography from "@material-ui/core/Typography";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { get_time, toDatetime } from "../lib/get_times";
+import { get_time, toDatetime } from "../../lib/get_times";
 
-import SearchList from "../components/searchList";
-import SearchFilter, { searchScopeState, orderState } from "./searchfilter";
+import CondidateList, { condidateListState } from "./condidateList";
+import SearchFilter, { searchScopeState, orderState, sortVideos } from "./searchfilter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,6 +62,7 @@ export default function SearchVideos({ time, vtuberList }) {
   // 条件にあった動画を保存 videoListで表示される
   const set_filtered_videoList = useSetRecoilState(filtered_videoListState);
   const setThisPage = useSetRecoilState(thisPageState);
+  const setCondidateList = useSetRecoilState(condidateListState);
   const [searchValue, setSearchValue] = useRecoilState(searchValueState);
   const searchScope = useRecoilValue(searchScopeState);
   const order = useRecoilValue(orderState);
@@ -80,44 +81,27 @@ export default function SearchVideos({ time, vtuberList }) {
             (searchScope.tag ? video.tags.map((tag) => tag.name).includes(searchValue) : false)
         )
       : [...all_videoList];
-      if (order == "start-asc") {
-        result.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
-      }
-      if (order == "start") {
-        result.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
-      }
-      if (order == "viewCount-asc") {
-        result.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
-      }
-      if (order == "viewCount") {
-        result.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
-      }
-    set_filtered_videoList([...result]);
+    const sortedVideos = sortVideos({order, videos: result});
+    set_filtered_videoList([...sortedVideos]);
     setThisPage(1);
   };
 
   const searchChange = (event) => {
     setSearchValue(event.target.value);
     searchFilterOpen ? setSearchFilterOpen(false) : ""
+    const reg = new RegExp(event.target.value);
+    const filtered_list =
+    event.target.value != ""
+      ? vtuberList.filter((vtuber) => vtuber.readname.match(reg) || vtuber.name.match(reg))
+      : [];
+    setCondidateList([...filtered_list]);
   };
 
   const searchDelete = () => {
     setSearchValue("");
     setThisPage(1);
-    const result = [...all_videoList];
-    if (order == "start-asc") {
-      result.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
-    }
-    if (order == "start") {
-      result.sort((a, b) => (a.startTime < b.startTime ? 1 : -1));
-    }
-    if (order == "viewCount-asc") {
-      result.sort((a, b) => (a.statistic.viewCount > b.statistic.viewCount ? 1 : -1));
-    }
-    if (order == "viewCount") {
-      result.sort((a, b) => (a.statistic.viewCount < b.statistic.viewCount ? 1 : -1));
-    }
-    set_filtered_videoList([...result]);
+    const sortedVideos = sortVideos({order, videos: [...all_videoList]});
+    set_filtered_videoList([...sortedVideos]);
   };
 
   return (
@@ -152,13 +136,16 @@ export default function SearchVideos({ time, vtuberList }) {
         <IconButton
           className={classes.iconButton}
           aria-label="filter"
-          onClick={() => {setSearchFilterOpen(!searchFilterOpen)}}
+          onClick={() => {
+            setSearchFilterOpen(!searchFilterOpen);
+            setCondidateList([])
+          }}
         >
           <FilterListIcon color={searchFilterOpen ? "primary" : "default"}/>
         </IconButton>
       </Paper>
       { searchFilterOpen ? <SearchFilter /> : null }
-      <SearchList vtuberList={vtuberList}/>
+      <CondidateList vtuberList={vtuberList}/>
     </Paper>
   );
 }
