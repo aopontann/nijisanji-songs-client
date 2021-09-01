@@ -1,8 +1,8 @@
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { searchCheckBoxState, searchValueState } from "./searchVideos";
+import { searchCheckBoxState, searchValueState } from "./search/searchVideos";
 import { all_videoListState, filtered_videoListState, thisPageState } from "./videoList";
-import { searchScopeState } from "./searchfilter";
+import { searchScopeState } from "./search/searchfilter";
 import { tagsListExpandedState } from "./accordion";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";

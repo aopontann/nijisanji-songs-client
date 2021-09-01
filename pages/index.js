@@ -1,9 +1,9 @@
 import React from "react";
 import { RecoilRoot } from "recoil";
 import VideoList from "../components/videoList";
-import SearchVideos from "../components/searchVideos";
+import SearchVideos from "../components/search/searchVideos";
 import EditTagDialog from "../components/editTagDialog";
-import SearchList from "../components/searchList";
+import SearchList from "../components/search/condidateList";
 import { get_time, toDatetime } from "../lib/get_times";
 import TagVtuberAccordion from "../components/accordion";
 

@@ -5,9 +5,9 @@ import {
   filtered_videoListState,
   thisPageState,
 } from "./videoList";
-import { searchCheckBoxState, searchValueState } from "./searchVideos";
+import { searchValueState } from "./search/searchVideos";
 import { vtuberListExpandedState } from "./accordion";
-import { searchScopeState } from "./searchfilter";
+import { searchScopeState } from "./search/searchfilter";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";

@@ -3,7 +3,7 @@ import useSWR from "swr";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { VideoCard } from "./video";
 import { useRecoilState, useSetRecoilState, atom } from "recoil";
-import { searchValueState } from "./searchVideos";
+import { searchValueState } from "./search/searchVideos";
 import Typography from "@material-ui/core/Typography";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
