@@ -21,8 +21,7 @@ import { get_time, toDatetime } from "../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 345 * 0.8,
-    margin: theme.spacing(0.5),
+
   },
   media: {
     height: 0,
@@ -76,7 +75,7 @@ export function VideoCard({ video, type }) {
 
   const startTime = toDatetime({
     time: video.startTime,
-    format: "公開時間: HH時mm分",
+    format: "公開時間: MM/DD HH:mm",
   });
 
   return (
@@ -99,7 +98,7 @@ export function VideoCard({ video, type }) {
         <Typography className={classes.title}>
           <Box lineHeight={1.1}>{video.title}</Box>
         </Typography>
-        <Typography variant="body" color="textSecondary" component="body">
+        <Typography variant="body" color="textSecondary" component="p">
           {type == "statistics"
             ? `視聴回数: ${video.statistic.viewCount.toLocaleString()}`
             : `${startTime}`}

@@ -19,7 +19,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import EditIcon from "@material-ui/icons/Edit";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
-import { get_time, toDatetime } from "../lib/get_times";
+import { get_time, toDatetime } from "../../lib/get_times";
 
 const useStyles = makeStyles((theme) => ({
   root: {

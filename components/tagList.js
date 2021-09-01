@@ -1,10 +1,9 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import {
-  videoListState,
-  searchValueState,
-  searchCheckBoxState,
-} from "../src/atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { searchCheckBoxState, searchValueState } from "./search/searchVideos";
+import { all_videoListState, filtered_videoListState, thisPageState } from "./videoList";
+import { searchScopeState } from "./search/searchfilter";
+import { tagsListExpandedState } from "./accordion";
 import { makeStyles } from "@material-ui/styles";
 import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
@@ -21,24 +20,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TagList({ videos, tags }) {
-  const [videoList, setVideoList] = useRecoilState(videoListState);
-  const [searchValue, setSearchValue] = useRecoilState(searchValueState);
-  const [searchCheckBox, setSearchCheckBox] =
-    useRecoilState(searchCheckBoxState);
+export default function TagList({ tags }) {
+  const all_videoList = useRecoilValue(all_videoListState);
+  const searchScope = useRecoilValue(searchScopeState);
+  const set_filtered_videoListState = useSetRecoilState(filtered_videoListState);
+  const setThisPage = useSetRecoilState(thisPageState);
+  const set_tagsListExpandedState = useSetRecoilState(tagsListExpandedState);
+  const setSearchValue = useSetRecoilState(searchValueState);
   const classes = useStyles();
 
   const tagClick = (event) => {
-    setSearchValue(event.target.textContent);
     const reg = new RegExp(event.target.textContent);
-    const result = videos.filter(
+    const result = all_videoList.filter(
       (video) =>
-        video.title.match(reg) ||
-        (searchCheckBox ? video.description.match(reg) : false) ||
-        video.tags.map((tagData) => tagData.name).includes(searchValue)
+        (searchScope.title ? video.title.match(reg) : false) ||
+        (searchScope.description ? video.description.match(reg) : false) ||
+        (searchScope.tag ? video.tags.map((tagData) => tagData.name).includes(event.target.textContent) : false)
     );
-    setVideoList([...result]);
+    set_filtered_videoListState([...result]);
+    setSearchValue(event.target.textContent);
+    set_tagsListExpandedState(false);
+    setThisPage(1);
   };
+
   return (
     <Typography component="ui" className={classes.chips}>
       {tags.map((tag) => {

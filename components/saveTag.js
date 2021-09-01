@@ -11,7 +11,8 @@ import {
 } from "../src/atoms";
 
 // ContextDialog.DialogProps = {open: false, videoId: "", tags: []}
-export default function SaveTag(props) {
+export default function SaveTag() {
+  const address = process.env.NEXT_PUBLIC_API_ADDRESS;
   console.log("-------saveTag---------");
   const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState);
   const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState);
@@ -32,7 +33,7 @@ export default function SaveTag(props) {
       body: JSON.stringify(send_body),
     }).then((res) => res.json());
   const { data, error, isValidating } = useSWR(
-    `${props.address}/tags`,
+    `${address}/tags`,
     fetcher
   );
 

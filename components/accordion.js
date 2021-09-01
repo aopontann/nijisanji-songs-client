@@ -1,6 +1,6 @@
 import React from "react";
-import { useRecoilState } from "recoil";
-import { videoListState } from "../src/atoms";
+import { useRecoilState, useRecoilValue, atom } from "recoil";
+import { filtered_videoListState } from "./videoList";
 import { makeStyles } from "@material-ui/core/styles";
 import TagList from "./tagList";
 import VtuberList from "./vtuberList";
@@ -10,9 +10,20 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
+export const tagsListExpandedState = atom({
+  key: "tagsListExpandedState",
+  default: false,
+});
+
+export const vtuberListExpandedState = atom({
+  key: "vtuberListExpandedState",
+  default: false,
+});
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    marginBottom: "2rem"
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -20,12 +31,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TagVtuberAccordion({ videos, tags, vtuberList }) {
-  const [videoList, setVideoList] = useRecoilState(videoListState);
+export default function TagVtuberAccordion({ tags, vtuberList }) {
+  const [tagsListExpanded, set_tagsListExpanded] = useRecoilState(tagsListExpandedState);
+  const [vtuberListExpanded, set_vtuberListExpanded] = useRecoilState(vtuberListExpandedState);
   const classes = useStyles();
-  return videoList.length == 0 ? (
+  return (
     <div className={classes.root}>
-      <Accordion>
+      <Accordion expanded={tagsListExpanded} onChange={() => set_tagsListExpanded(!tagsListExpanded)}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -34,10 +46,10 @@ export default function TagVtuberAccordion({ videos, tags, vtuberList }) {
           <Typography className={classes.heading}>タグ一覧</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <TagList videos={videos} tags={tags} />
+          <TagList tags={tags} />
         </AccordionDetails>
       </Accordion>
-      <Accordion>
+      <Accordion expanded={vtuberListExpanded} onChange={() => set_vtuberListExpanded(!vtuberListExpanded)}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
@@ -46,11 +58,9 @@ export default function TagVtuberAccordion({ videos, tags, vtuberList }) {
           <Typography className={classes.heading}>ライバー一覧</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <VtuberList videos={videos} vtuberList={vtuberList} />
+          <VtuberList vtuberList={vtuberList} />
         </AccordionDetails>
       </Accordion>
     </div>
-  ) : (
-    <div>{null}</div>
-  );
+  )
 }
