@@ -141,14 +141,11 @@ export default function EditTagDialog() {
             className={classes.input}
             placeholder="追加するタグ名..."
             inputProps={{ "aria-label": "Add Tag" }}
-            inputComponent="search"
-            onSubmit={e => alert("aaaa")}
             value={inputTagName}
             onChange={(e) => {
               setInputTagName(e.target.value);
               setTagListOpen(true);
             }}
-            onKeyPress={(e) => console.log("e.key=", e.key)}
           />
           <IconButton
             className={classes.iconButton}
