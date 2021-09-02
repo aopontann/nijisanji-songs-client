@@ -1,6 +1,6 @@
 import { get_time, toDatetime } from "../lib/get_times";
 import { VideoCard } from "../components/video";
-import EditTagDialog from "../components/editTagDialog";
+import EditTagDialog from "../components/tag/editTagDialog";
 import { RecoilRoot } from "recoil";
 import { makeStyles } from "@material-ui/styles";
 import Box from "@material-ui/core/Box";
