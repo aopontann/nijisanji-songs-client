@@ -22,6 +22,7 @@ import { get_time } from "../../lib/get_times";
 
 import CondidateList, { condidateListState } from "./condidateList";
 import SearchFilter, { searchScopeState, orderState, sortVideos } from "./searchfilter";
+import { Input } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,11 +60,10 @@ export default function SearchVideos({ time, vtuberList }) {
   const searchScope = useRecoilValue(searchScopeState);
   const order = useRecoilValue(orderState);
   const [searchFilterOpen, setSearchFilterOpen] = React.useState(false);
+  const [composing, setComposing] = React.useState(false);
   const classes = useStyles();
 
   const searchClick = () => {
-    const clickTime = get_time({ format: "YYYY-MM-DD" });
-    clickTime > time ? window.alert("ページを更新してください") : "";
     const reg = new RegExp(searchValue);
     const result = searchValue
       ? all_videoList.filter(
@@ -75,6 +75,7 @@ export default function SearchVideos({ time, vtuberList }) {
       : [...all_videoList];
     const sortedVideos = sortVideos({order, videos: result});
     set_filtered_videoList([...sortedVideos]);
+    setCondidateList([]);
     setThisPage(1);
   };
 
@@ -85,8 +86,13 @@ export default function SearchVideos({ time, vtuberList }) {
     const filtered_list =
     event.target.value != ""
       ? vtuberList.filter((vtuber) => vtuber.readname.match(reg) || vtuber.name.match(reg))
-      : [];
+      : []
     setCondidateList([...filtered_list]);
+    if (event.target.value == "") {
+      const sortedVideos = sortVideos({order, videos: [...all_videoList]});
+      set_filtered_videoList([...sortedVideos]);
+      setCondidateList([]);
+    }
   };
 
   const searchDelete = () => {
@@ -94,11 +100,12 @@ export default function SearchVideos({ time, vtuberList }) {
     setThisPage(1);
     const sortedVideos = sortVideos({order, videos: [...all_videoList]});
     set_filtered_videoList([...sortedVideos]);
+    setCondidateList([]);
   };
 
   return (
     <Paper component="div" style={{ maxWidth: "700px", marginBottom: "2rem" }}>
-      <Paper component="form" className={classes.root}>
+      <Paper component="div" className={classes.root}>
         <IconButton
           className={classes.iconButton}
           aria-label="search"
@@ -111,6 +118,9 @@ export default function SearchVideos({ time, vtuberList }) {
           placeholder="曲名,ライバー名,タグ..."
           inputProps={{ "aria-label": "Search Videos" }}
           value={searchValue}
+          onKeyDown={(e) => e.key == "Enter" && composing ? searchClick() : ""}
+          onCompositionStart={() => setComposing(false)}
+          onCompositionEnd={() => setComposing(true)}
           onChange={searchChange}
         />
         {searchValue ? (
@@ -141,3 +151,13 @@ export default function SearchVideos({ time, vtuberList }) {
     </Paper>
   );
 }
+
+/*
+<InputBase
+          className={classes.input}
+          placeholder="曲名,ライバー名,タグ..."
+          inputProps={{ "aria-label": "Search Videos" }}
+          value={searchValue}
+          onChange={searchChange}
+        />
+*/

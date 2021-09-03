@@ -78,6 +78,7 @@ export default function EditTagDialog() {
 
   const [inputTagName, setInputTagName] = useRecoilState(inputTagNameState);
   const [deleteTagName, setDeleteTagName] = useState("");
+  const [composing, setComposing] = useState(true);
 
   const classes = useStyles();
 
@@ -136,12 +137,15 @@ export default function EditTagDialog() {
         <DialogContentText>
           動画に関係するタグを追加してください。詳しくは「このサイトについて」ページで確認してください。
         </DialogContentText>
-        <Paper component="form" className={classes.root}>
+        <Paper component="div" className={classes.root}>
           <InputBase
             className={classes.input}
             placeholder="追加するタグ名..."
             inputProps={{ "aria-label": "Add Tag" }}
             value={inputTagName}
+            onKeyDown={(e) => e.key == "Enter" && composing ? handleAdd() : ""}
+            onCompositionStart={() => setComposing(false)}
+            onCompositionEnd={() => setComposing(true)}
             onChange={(e) => {
               setInputTagName(e.target.value);
               setTagListOpen(true);
