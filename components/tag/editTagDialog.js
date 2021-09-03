@@ -25,7 +25,6 @@ import CondidateTagList, { tagListOpenState } from "./condidateTagList";
 import AddTag from "./addTag";
 import DeleteTag from "./deleteTag";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "2px 4px",
@@ -57,28 +56,31 @@ export const updateTagOpenState = atom({
   key: "updateTagOpenState",
   default: {
     add: false,
-    delete: false
+    delete: false,
   },
 });
 
 export const inputTagNameState = atom({
   key: "inputTagNameState",
-  default: ""
+  default: "",
 });
 
 export default function EditTagDialog() {
   const [all_videoList, set_all_videoList] = useRecoilState(all_videoListState);
-  const [filtered_videoList, set_filtered_videoList] = useRecoilState(filtered_videoListState);
-  
+  const [filtered_videoList, set_filtered_videoList] = useRecoilState(
+    filtered_videoListState
+  );
+
   const [dialogOpen, setDialogOpen] = useRecoilState(dialogOpenState); //boolean
   const [updateTagOpen, setUpdateTagOpen] = useRecoilState(updateTagOpenState);
   const [dialogVideoId, setDialogVideoId] = useRecoilState(dialogVideoIdState); //string
   const [dialogTags, setDialogTags] = useRecoilState(dialogTagsState); //string[]
-  const [tagListOpen, setTagListOpen] = useRecoilState(tagListOpenState)
+  const [tagListOpen, setTagListOpen] = useRecoilState(tagListOpenState);
 
   const [inputTagName, setInputTagName] = useRecoilState(inputTagNameState);
   const [deleteTagName, setDeleteTagName] = useState("");
   const [composing, setComposing] = useState(true);
+  const [pressEnter, setPressEnter] = useState(false); //送信許可
 
   const classes = useStyles();
 
@@ -105,19 +107,21 @@ export default function EditTagDialog() {
   };
 
   const handleAdd = () => {
-    // 重複するタグは追加しない
-    dialogTags.includes(inputTagName)
-      ? ""
-      : setDialogTags([...dialogTags, inputTagName]);
-    //setInputTagName("");
-    inputTagName != "" ? setUpdateTagOpen({...updateTagOpen, add: true}) : "";
+    // 重複するタグ,入力していないタグは追加しない
+    if (inputTagName !== "" && !dialogTags.includes(inputTagName)) {
+      console.log(`タグ名: "${inputTagName}"`);
+      setDialogTags([...dialogTags, inputTagName]);
+      setUpdateTagOpen({ ...updateTagOpen, add: true });
+    } else {
+      console.log("NG");
+    }
   };
 
   const handleDelete = (chipToDelete) => () => {
     console.log(chipToDelete);
     setDeleteTagName(chipToDelete);
     setDialogTags(dialogTags.filter((tagName) => tagName !== chipToDelete));
-    setUpdateTagOpen({...updateTagOpen, delete: true});
+    setUpdateTagOpen({ ...updateTagOpen, delete: true });
   };
 
   return (
@@ -143,9 +147,16 @@ export default function EditTagDialog() {
             placeholder="追加するタグ名..."
             inputProps={{ "aria-label": "Add Tag" }}
             value={inputTagName}
-            onKeyDown={(e) => e.key == "Enter" && composing ? handleAdd() : ""}
-            onCompositionStart={() => setComposing(false)}
+            onKeyUp={(e) => {
+              e.key == "Enter" && composing ? setPressEnter(true) : ""
+              e.key == "Enter" && pressEnter ? handleAdd() : ""
+            }}
+            onCompositionStart={() => {
+              setComposing(false);
+              setPressEnter(false);
+            }}
             onCompositionEnd={() => setComposing(true)}
+            onFocus={() => setPressEnter(true)}
             onChange={(e) => {
               setInputTagName(e.target.value);
               setTagListOpen(true);
