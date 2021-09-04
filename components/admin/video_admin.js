@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
 import { makeStyles } from "@material-ui/styles";
 import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
@@ -10,6 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import Delete from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import MusicNoteIcon from "@material-ui/icons/MusicNote";
+import YouTubeIcon from '@material-ui/icons/YouTube';
+import { deleteVideoState } from "./videoList_admin";
+import { viewVideoState } from "./viewVideo_dialog";
 
 const useStyles = makeStyles((theme) => ({
   videos: {
@@ -26,6 +30,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function VideoCardAdmin({ video }) {
+  const [deleteVideo, setDeleteVideo] = useRecoilState(deleteVideoState);
+  const [viewVideo, setViewVideo] = useRecoilState(viewVideoState);
   const [videoState, setVideoState] = useState(video);
   const [deleteState, setDeleteState] = useState(false);
   const classes = useStyles();
@@ -48,12 +54,13 @@ export default function VideoCardAdmin({ video }) {
     });
   };
 
-  const handleDeleteVideo = async() => {
-    fetch(!deleteState ? `${process.env.NEXT_PUBLIC_API_ADDRESS}/videos?id=${videoState.id}` : null, {
-      method: "DELETE",
-  }).then((res) => {
+  const handleDeleteVideo = () => {
+    !deleteState ? setDeleteVideo({videoId: video.id, open: true}) : ""
     setDeleteState(true);
-  }) 
+  }
+
+  const handleViewVideo = () => {
+    setViewVideo({videoId: videoState.id, open: true})
   }
 
   return (
@@ -97,6 +104,12 @@ export default function VideoCardAdmin({ video }) {
             onClick={handleDeleteVideo}
           >
             <Delete color={deleteState ? "primary" : "default"} />
+          </IconButton>
+          <IconButton
+            aria-label="delete to video"
+            onClick={handleViewVideo}
+          >
+            <YouTubeIcon />
           </IconButton>
         </CardActions>
       </div>

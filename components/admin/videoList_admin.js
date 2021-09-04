@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import useSWR from "swr";
-import VideoCardAdmin from "./video_admin";
 import { useRecoilState, atom } from "recoil";
+import VideoCardAdmin from "./video_admin";
+import DeleteVideo from "./deleteVideo";
+import ViewVideoDialog from "./viewVideo_dialog";
+import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -17,6 +20,14 @@ export const filtered_videoListState = atom({
   default: [],
 });
 
+export const deleteVideoState = atom({
+  key: "deleteVideoState",
+  default: {
+    open: false,
+    videoId: "",
+  },
+});
+
 const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -29,6 +40,8 @@ export default function VideoListAdmin() {
   const [filtered_videoList, set_filtered_videoList] = useRecoilState(
     filtered_videoListState
   );
+  const [deleteVideo, setDeleteVideo] = useRecoilState(deleteVideoState);
+  const [updateVideo, setUpdateVideo] = useState(false);
   const classes = useStyles();
 
   const params = {
@@ -43,25 +56,29 @@ export default function VideoListAdmin() {
     { revalidateOnFocus: true, focusThrottleInterval: 1000 * 60 }
   );
 
-  if (data?.result) {
-    set_all_videoList(data.result);
-    set_filtered_videoList(data.result); //初期データ
+  if (isValidating && !updateVideo) {
+    console.log("データ更新");
+    setUpdateVideo(true);
+  }
+
+  if (!isValidating && data && updateVideo) {
+    set_all_videoList([...data.result]);
+    set_filtered_videoList([...data.result]); //初期データ
+    setUpdateVideo(false);
   }
 
   return (
-    <Box
-      display="flex"
-      flexWrap="wrap"
-      p={1}
-      m={0.2}
-      bgcolor="background.paper"
-    >
+    <Grid container spacing={2}>
       {filtered_videoList.map((video, index) => (
-        <VideoCardAdmin key={index} video={video} />
+        <Grid item xs={2} key={video.id}>
+          <VideoCardAdmin video={video} />
+        </Grid>
       ))}
       <Backdrop className={classes.backdrop} open={isValidating ? true : false}>
         <CircularProgress color="inherit" />
       </Backdrop>
-    </Box>
+      {deleteVideo.open ? <DeleteVideo /> : null}
+      <ViewVideoDialog />
+    </Grid>
   );
 }
